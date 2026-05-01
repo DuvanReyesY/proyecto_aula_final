@@ -1,0 +1,39 @@
+<ion-menu contentId="dashboard-content" menuId="dashboardMenu">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Veterinaria Canes</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <div class="menu-header">
+      <ion-icon name="person-circle" size="large" color="primary"></ion-icon>
+      <p class="nombre">{{ nombreUsuario }}</p>
+      <ion-badge [color]="rol === 'administrador' ? 'success' :
+                          rol === 'veterinario'   ? 'primary' :
+                          rol === 'recepcionista' ? 'warning' : 'medium'">
+        {{ rol | titlecase }}
+      </ion-badge>
+    </div>
+
+    <ion-list lines="none">
+      <ng-container *ngFor="let item of menuItems">
+        <ion-item
+          *ngIf="item.visible"
+          button
+          [routerLink]="item.ruta"
+          routerLinkActive="active-link">
+          <ion-icon [name]="item.icon" slot="start" [color]="item.color || 'primary'"></ion-icon>
+          <ion-label [color]="item.color || ''">{{ item.label }}</ion-label>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+
+    <ion-list lines="none">
+      <ion-item button (click)="logout()">
+        <ion-icon name="log-out-outline" slot="start" color="danger"></ion-icon>
+        <ion-label color="danger">Cerrar Sesión</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>

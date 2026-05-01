@@ -1,0 +1,10 @@
+ion-tab-bar {
+  --background: var(--ion-background-color);
+  border-top: 1px solid var(--ion-color-light);
+  height: 56px;
+}
+
+ion-tab-button {
+  --color: var(--ion-color-medium);
+  --color-selected: var(--ion-color-primary);
+}

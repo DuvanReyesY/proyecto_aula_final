@@ -1,0 +1,274 @@
+/* =============================================
+   REGISTER PAGE — Diseño protagonista
+   ============================================= */
+
+:host {
+  --admin:   #10b981;
+  --recep:   #f59e0b;
+  --vet:     #3b82f6;
+  --cliente: #8b5cf6;
+}
+
+.register-content {
+  --background: #f1f5f9;
+}
+
+/* ---- HERO ---- */
+.register-hero {
+  background: var(--ion-color-primary);
+  padding: 28px 20px 36px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: 50%;
+    transform: translateX(-50%);
+    width: 120%; height: 60px;
+    background: #f1f5f9;
+    border-radius: 50%;
+  }
+}
+
+.hero-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.hero-icon {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  color: #fff;
+  position: relative;
+  z-index: 2;
+  transition: background 0.3s;
+  backdrop-filter: blur(6px);
+  border: 2px solid rgba(255,255,255,0.4);
+}
+
+.hero-admin   { background: rgba(16,185,129,0.35); }
+.hero-recepcionista { background: rgba(245,158,11,0.35); }
+.hero-veterinario   { background: rgba(59,130,246,0.35); }
+.hero-cliente { background: rgba(139,92,246,0.35); }
+
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  animation: pulse-ring 2.5s ease-out infinite;
+}
+.ring-1 { width: 96px; height: 96px; animation-delay: 0s; }
+.ring-2 { width: 120px; height: 120px; animation-delay: 0.6s; }
+
+@keyframes pulse-ring {
+  0%   { transform: scale(0.85); opacity: 0.6; }
+  100% { transform: scale(1.1);  opacity: 0; }
+}
+
+.hero-title {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+
+.text-administrador { color: #6ee7b7; }
+.text-recepcionista { color: #fde68a; }
+.text-veterinario   { color: #93c5fd; }
+.text-cliente       { color: #c4b5fd; }
+
+.hero-sub {
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  margin: 0;
+}
+
+/* ---- CARDS ---- */
+.seccion-card {
+  background: #fff;
+  margin: 12px 16px 0;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+.seccion-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #6b7280;
+  margin: 0 0 16px;
+
+  ion-icon { font-size: 15px; color: var(--ion-color-primary); }
+}
+
+/* ---- ROLE GRID ---- */
+.role-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.role-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 8px;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  span {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    transition: color 0.2s;
+  }
+
+  &.activo {
+    border-color: var(--ion-color-primary);
+    background: rgba(var(--ion-color-primary-rgb), 0.06);
+    span { color: var(--ion-color-primary); }
+  }
+
+  &:active { transform: scale(0.96); }
+}
+
+.role-btn-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.rbg-admin   { background: #d1fae5; color: #065f46; }
+.rbg-recep   { background: #fef3c7; color: #92400e; }
+.rbg-vet     { background: #dbeafe; color: #1e40af; }
+.rbg-cliente { background: #ede9fe; color: #5b21b6; }
+
+/* ---- CAMPOS ---- */
+.campo-grupo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.campo {
+  margin-bottom: 14px;
+
+  &:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 6px;
+  }
+}
+
+.req { color: #ef4444; }
+
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 16px;
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.input-icon-end {
+  position: absolute;
+  right: 12px;
+  font-size: 18px;
+  color: #9ca3af;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.input-wrap input {
+  width: 100%;
+  padding: 11px 40px 11px 38px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #1f2937;
+  background: #f9fafb;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+
+  &::placeholder { color: #d1d5db; }
+
+  &:focus {
+    border-color: var(--ion-color-primary);
+    box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.12);
+    background: #fff;
+  }
+}
+
+/* ---- BOTÓN REGISTRAR ---- */
+.btn-wrapper {
+  padding: 20px 16px 40px;
+  text-align: center;
+}
+
+.btn-registrar {
+  width: 100%;
+  height: 54px;
+  border-radius: 14px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.25s;
+  letter-spacing: 0.2px;
+
+  ion-icon { font-size: 20px; }
+
+  &:active { transform: scale(0.97); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.btn-administrador { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 6px 20px rgba(16,185,129,0.4); }
+.btn-recepcionista { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 6px 20px rgba(245,158,11,0.4); }
+.btn-veterinario   { background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 0 6px 20px rgba(59,130,246,0.4); }
+.btn-cliente       { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 6px 20px rgba(139,92,246,0.4); }
+
+.req-nota {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 360px) {
+  .campo-grupo { grid-template-columns: 1fr; }
+  .role-grid   { grid-template-columns: 1fr 1fr; }
+}

@@ -1,0 +1,109 @@
+/* =========================
+   SIDE MENU COMPONENT SCSS
+   ========================= */
+
+/* Contenido interno del menú */
+ion-content {
+  --padding-top: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-bottom: 20px;
+}
+
+/* Header superior del menú */
+.menu-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px 16px;
+  border-bottom: 1px solid var(--ion-color-light);
+  background: var(--ion-color-light);
+
+  ion-icon {
+    font-size: 56px;
+    margin-bottom: 8px;
+  }
+
+  .nombre {
+    margin: 8px 0 6px;
+    font-weight: 600;
+    font-size: 15px;
+    text-align: center;
+    color: var(--ion-color-dark);
+    word-break: break-word;
+  }
+
+  ion-badge {
+    margin-top: 4px;
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
+
+/* Links activos */
+.active-link {
+  --background: rgba(var(--ion-color-primary-rgb), 0.08);
+  border-right: 3px solid var(--ion-color-primary);
+  font-weight: 600;
+}
+
+/* Listas */
+ion-list {
+  padding: 8px 0;
+  background: transparent;
+}
+
+/* Items del menú */
+ion-item {
+  --border-radius: 8px;
+  --padding-start: 14px;
+  --inner-padding-end: 10px;
+  margin: 4px 8px;
+  font-size: 15px;
+}
+
+/* Íconos */
+ion-item ion-icon {
+  font-size: 22px;
+}
+
+/* Texto */
+ion-label {
+  font-weight: 500;
+}
+
+/* Botón logout */
+ion-list:last-child {
+  margin-top: 16px;
+  border-top: 1px solid var(--ion-color-light);
+  padding-top: 10px;
+}
+
+/* Toolbar */
+ion-toolbar {
+  --min-height: 56px;
+}
+
+ion-title {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .menu-header {
+    padding: 20px 12px 14px;
+
+    ion-icon {
+      font-size: 50px;
+    }
+
+    .nombre {
+      font-size: 14px;
+    }
+  }
+
+  ion-item {
+    font-size: 14px;
+  }
+}

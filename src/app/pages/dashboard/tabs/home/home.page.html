@@ -1,0 +1,211 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <div class="header-title">
+        <ion-icon name="home"></ion-icon>
+        <span>Home</span>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="home-content">
+  <div *ngIf="cargando" class="loading-container">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <ng-container *ngIf="!cargando">
+
+    <!-- ── HEADER ── -->
+    <div class="hero-header" [ngClass]="'hero-' + rol">
+      <div class="hero-dec hero-dec-1"></div>
+      <div class="hero-dec hero-dec-2"></div>
+
+      <div class="hero-top">
+        <div class="hero-user">
+          <div class="hero-avatar">
+            <ion-icon name="person-outline"></ion-icon>
+          </div>
+          <div>
+            <span class="hero-greeting">Bienvenido de nuevo</span>
+            <strong class="hero-name">{{ nombreUsuario }}</strong>
+          </div>
+        </div>
+        <button class="notif-btn">
+          <ion-icon name="notifications-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="hero-body">
+        <div class="role-chip">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          {{ rol | titlecase }}
+        </div>
+        <h1>{{ tituloHero }}</h1>
+        <p>{{ subtituloHero }}</p>
+        <div class="hero-date">
+          <ion-icon name="calendar-outline"></ion-icon>
+          {{ fechaHoy }}
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STATS FLOTANTES ── -->
+    <div class="stats-float">
+
+      <ng-container *ngIf="rol === 'administrador'">
+        <div class="stat-pill">
+          <div class="stat-ico s-blue"><ion-icon name="people"></ion-icon></div>
+          <div class="stat-num">{{ totalClientes }}</div>
+          <div class="stat-lbl">Clientes</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-ico s-green"><ion-icon name="paw"></ion-icon></div>
+          <div class="stat-num">{{ totalMascotas }}</div>
+          <div class="stat-lbl">Mascotas</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-ico s-amber"><ion-icon name="medkit"></ion-icon></div>
+          <div class="stat-num">{{ totalVeterinarios }}</div>
+          <div class="stat-lbl">Vets</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-ico s-purple"><ion-icon name="desktop-outline"></ion-icon></div>
+          <div class="stat-num">{{ totalRecepcionistas }}</div>
+          <div class="stat-lbl">Recep.</div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="rol === 'recepcionista'">
+        <div class="stat-pill">
+          <div class="stat-ico s-blue"><ion-icon name="people"></ion-icon></div>
+          <div class="stat-num">{{ totalClientes }}</div>
+          <div class="stat-lbl">Clientes</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-ico s-green"><ion-icon name="paw"></ion-icon></div>
+          <div class="stat-num">{{ totalMascotas }}</div>
+          <div class="stat-lbl">Mascotas</div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="rol === 'veterinario'">
+        <div class="stat-pill">
+          <div class="stat-ico s-green"><ion-icon name="paw"></ion-icon></div>
+          <div class="stat-num">{{ totalMascotas }}</div>
+          <div class="stat-lbl">Mascotas</div>
+        </div>
+      </ng-container>
+
+    </div>
+
+    <div class="home-body">
+
+      <!-- ── ACCESOS RÁPIDOS — Admin ── -->
+      <ng-container *ngIf="rol === 'administrador'">
+        <div class="sec-header">
+          <span class="sec-title">Accesos rápidos</span>
+        </div>
+        <div class="quick-grid">
+          <div class="qcard" routerLink="/layout/usuarios/crear">
+            <div class="qcard-icon s-blue"><ion-icon name="person-add-outline"></ion-icon></div>
+            <div class="qcard-body">
+              <p>Nuevo usuario</p>
+              <span>Registrar cuenta</span>
+            </div>
+            <ion-icon name="chevron-forward-outline" class="qcard-arrow"></ion-icon>
+          </div>
+          <div class="qcard" routerLink="/layout/mascotas">
+            <div class="qcard-icon s-green"><ion-icon name="paw-outline"></ion-icon></div>
+            <div class="qcard-body">
+              <p>Nueva mascota</p>
+              <span>Agregar registro</span>
+            </div>
+            <ion-icon name="chevron-forward-outline" class="qcard-arrow"></ion-icon>
+          </div>
+          <div class="qcard" routerLink="/layout/citas">
+            <div class="qcard-icon s-amber"><ion-icon name="calendar-outline"></ion-icon></div>
+            <div class="qcard-body">
+              <p>Nueva cita</p>
+              <span>Agendar consulta</span>
+            </div>
+            <ion-icon name="chevron-forward-outline" class="qcard-arrow"></ion-icon>
+          </div>
+          <div class="qcard" routerLink="/layout/privilegios">
+            <div class="qcard-icon s-purple"><ion-icon name="shield-checkmark-outline"></ion-icon></div>
+            <div class="qcard-body">
+              <p>Privilegios</p>
+              <span>Gestionar accesos</span>
+            </div>
+            <ion-icon name="chevron-forward-outline" class="qcard-arrow"></ion-icon>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ── ACCESOS RÁPIDOS — Recepcionista ── -->
+      <ng-container *ngIf="rol === 'recepcionista'">
+        <div class="sec-header"><span class="sec-title">Acciones rápidas</span></div>
+        <div class="quick-grid">
+          <div class="qcard" routerLink="/layout/usuarios/crear">
+            <div class="qcard-icon s-blue"><ion-icon name="person-add-outline"></ion-icon></div>
+            <div class="qcard-body"><p>Nuevo cliente</p><span>Registrar usuario</span></div>
+            <ion-icon name="chevron-forward-outline" class="qcard-arrow"></ion-icon>
+          </div>
+          <div class="qcard" routerLink="/layout/mascotas">
+            <div class="qcard-icon s-green"><ion-icon name="paw-outline"></ion-icon></div>
+            <div class="qcard-body"><p>Nueva mascota</p><span>Agregar registro</span></div>
+            <ion-icon name="chevron-forward-outline" class="qcard-arrow"></ion-icon>
+          </div>
+          <div class="qcard" routerLink="/layout/citas">
+            <div class="qcard-icon s-amber"><ion-icon name="calendar-outline"></ion-icon></div>
+            <div class="qcard-body"><p>Nueva cita</p><span>Agendar consulta</span></div>
+            <ion-icon name="chevron-forward-outline" class="qcard-arrow"></ion-icon>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ── ACCESOS RÁPIDOS — Veterinario ── -->
+      <ng-container *ngIf="rol === 'veterinario'">
+        <div class="sec-header"><span class="sec-title">Mis acciones</span></div>
+        <div class="quick-grid">
+          <div class="qcard" routerLink="/layout/mascotas">
+            <div class="qcard-icon s-green"><ion-icon name="paw-outline"></ion-icon></div>
+            <div class="qcard-body"><p>Ver mascotas</p><span>Listado completo</span></div>
+            <ion-icon name="chevron-forward-outline" class="qcard-arrow"></ion-icon>
+          </div>
+          <div class="qcard" routerLink="/layout/citas">
+            <div class="qcard-icon s-amber"><ion-icon name="calendar-outline"></ion-icon></div>
+            <div class="qcard-body"><p>Mis citas</p><span>Agenda del día</span></div>
+            <ion-icon name="chevron-forward-outline" class="qcard-arrow"></ion-icon>
+          </div>
+          <div class="qcard" routerLink="/layout/historial">
+            <div class="qcard-icon s-blue"><ion-icon name="document-text-outline"></ion-icon></div>
+            <div class="qcard-body"><p>Historial médico</p><span>Consultar registros</span></div>
+            <ion-icon name="chevron-forward-outline" class="qcard-arrow"></ion-icon>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ── ACCESOS RÁPIDOS — Cliente ── -->
+      <ng-container *ngIf="rol === 'cliente'">
+        <div class="sec-header"><span class="sec-title">Mis accesos</span></div>
+        <div class="quick-grid">
+          <div class="qcard" routerLink="/layout/mascotas">
+            <div class="qcard-icon s-green"><ion-icon name="paw-outline"></ion-icon></div>
+            <div class="qcard-body"><p>Mis mascotas</p><span>Ver perfiles</span></div>
+            <ion-icon name="chevron-forward-outline" class="qcard-arrow"></ion-icon>
+          </div>
+          <div class="qcard" routerLink="/layout/citas">
+            <div class="qcard-icon s-amber"><ion-icon name="calendar-outline"></ion-icon></div>
+            <div class="qcard-body"><p>Mis citas</p><span>Historial y próximas</span></div>
+            <ion-icon name="chevron-forward-outline" class="qcard-arrow"></ion-icon>
+          </div>
+        </div>
+      </ng-container>
+
+    </div>
+  </ng-container>
+</ion-content>

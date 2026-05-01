@@ -1,0 +1,202 @@
+// =============================================
+// REGISTER MASCOTA PAGE
+// =============================================
+
+.nueva-mascota-content {
+  --background: #f1f5f9;
+}
+
+// ── Formulario ───────────────────────────────
+.form-mascota {
+  padding: 16px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ── Secciones ────────────────────────────────
+.form-section {
+  background: #fff;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+
+  ion-icon {
+    font-size: 18px;
+    color: var(--ion-color-primary);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #6b7280;
+  }
+}
+
+// ── Campos ───────────────────────────────────
+.campo-item {
+  --background: #f9fafb;
+  --border-radius: 12px;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --inner-padding-end: 0;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  border: 1.5px solid #e5e7eb;
+  transition: border-color 0.2s;
+
+  &.item-has-focus {
+    border-color: var(--ion-color-primary);
+  }
+
+  ion-label {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #374151 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  ion-input, ion-select {
+    font-size: 14px;
+    color: #1f2937;
+    --placeholder-color: #d1d5db;
+    margin-top: 4px;
+  }
+}
+
+// ── Selector de cliente ──────────────────────
+.campo-cliente {
+  background: #f9fafb;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+
+  &:active {
+    border-color: var(--ion-color-primary);
+  }
+}
+
+.cliente-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cliente-avatar-sm {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--ion-color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.cliente-datos {
+  flex: 1;
+  overflow: hidden;
+
+  .cliente-nombre {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f2937;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cliente-correo {
+    display: block;
+    font-size: 12px;
+    color: #9ca3af;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.cliente-placeholder {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #9ca3af;
+  font-size: 14px;
+
+  ion-icon:first-child {
+    font-size: 18px;
+  }
+
+  span { flex: 1; }
+}
+
+.campo-icono {
+  font-size: 16px;
+  color: #9ca3af;
+}
+
+// ── Razas cargando ───────────────────────────
+.razas-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+// ── Errores ──────────────────────────────────
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 4px 8px;
+
+  ion-icon { font-size: 14px; }
+}
+
+.req { color: #ef4444; }
+
+// ── Botón guardar ────────────────────────────
+.btn-guardar-wrap {
+  padding: 8px 0 0;
+
+  ion-button {
+    --border-radius: 14px;
+    height: 52px;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+  }
+}
+
+.fecha-input-nativa {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1rem;
+  color: var(--ion-text-color);
+  padding: 10px 0;
+  font-family: inherit;
+}

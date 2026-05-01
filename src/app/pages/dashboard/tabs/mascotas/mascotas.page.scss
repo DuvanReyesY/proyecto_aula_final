@@ -1,0 +1,227 @@
+// =============================================
+// MASCOTAS PAGE
+// =============================================
+
+.mascotas-content {
+  --background: #f1f5f9;
+}
+
+// ── Toolbar filtros ──────────────────────────
+.toolbar-filtros {
+  --padding-top: 4px;
+  --padding-bottom: 8px;
+
+  ion-searchbar {
+    --border-radius: 12px;
+    --background: #fff;
+    --box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 0 12px;
+  }
+}
+
+.filtros-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 12px 8px;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+
+  ion-chip {
+    --background: #fff;
+    --color: #6b7280;
+    border: 1.5px solid #e5e7eb;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+    transition: all 0.2s;
+
+    &.chip-activo {
+      --background: var(--ion-color-primary);
+      --color: #fff;
+      border-color: var(--ion-color-primary);
+    }
+  }
+}
+
+// ── Estado vacío / cargando ──────────────────
+.estado-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+
+  ion-icon {
+    font-size: 64px;
+    opacity: 0.3;
+  }
+
+  p {
+    color: #9ca3af;
+    font-size: 15px;
+    margin: 0;
+  }
+}
+
+// ── Grid ─────────────────────────────────────
+.mascotas-grid {
+  padding: 12px 8px 24px;
+}
+
+// ── Card ─────────────────────────────────────
+.mascota-card {
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  overflow: visible;
+  position: relative;
+  margin: 0 0 4px;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  &.mascota-inactiva {
+    opacity: 0.6;
+    filter: grayscale(40%);
+  }
+}
+
+// ── Badge estado ─────────────────────────────
+.badge-estado {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #10b981;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 2;
+
+  &.badge-inactivo {
+    background: #9ca3af;
+  }
+}
+
+// ── Avatar ───────────────────────────────────
+.mascota-avatar {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0 8px;
+
+  img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--ion-color-primary);
+  }
+}
+
+.avatar-placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 36px;
+    color: #fff;
+  }
+}
+
+// ── Card header ──────────────────────────────
+ion-card-header {
+  padding-bottom: 4px;
+  text-align: center;
+}
+
+ion-card-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+ion-card-subtitle {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+// ── Info chips ───────────────────────────────
+.mascota-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.info-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f3f4f6;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #374151;
+
+  ion-icon {
+    font-size: 13px;
+    color: var(--ion-color-primary);
+  }
+}
+
+// ── Dueño ────────────────────────────────────
+.mascota-dueno {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #6b7280;
+
+  ion-icon {
+    font-size: 15px;
+    color: var(--ion-color-primary);
+    flex-shrink: 0;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// ── Acciones ─────────────────────────────────
+.mascota-acciones {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 12px 12px;
+  border-top: 1px solid #f3f4f6;
+  margin-top: 4px;
+}
+
+// ── Botón nueva ──────────────────────────────
+.btn-nueva {
+  --border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  height: 34px;
+}

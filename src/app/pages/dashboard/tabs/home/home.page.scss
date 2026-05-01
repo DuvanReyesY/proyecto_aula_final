@@ -1,0 +1,146 @@
+.home-content { --background: #f0f2f8; }
+
+.loading-container {
+  display: flex; justify-content: center;
+  padding-top: 45%; 
+}
+
+// ── Header hero ───────────────────────────────────────────────────────────────
+
+.hero-header {
+  background: #2f54eb;
+  padding: 52px 18px 36px;
+  position: relative; overflow: hidden;
+
+  &.hero-recepcionista { background: #d48806; }
+  &.hero-veterinario   { background: #096dd9; }
+  &.hero-cliente       { background: #434343; }
+}
+
+.hero-dec {
+  position: absolute; border-radius: 50%;
+  &-1 { width: 200px; height: 200px; background: rgba(255,255,255,0.06); top: -70px; right: -50px; }
+  &-2 { width: 110px; height: 110px; background: rgba(255,255,255,0.04); bottom: -30px; left: 10px; }
+}
+
+.hero-top {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px; position: relative;
+}
+
+.hero-user { display: flex; align-items: center; gap: 10px; }
+
+.hero-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  display: flex; align-items: center; justify-content: center;
+  ion-icon { color: #fff; font-size: 18px; }
+}
+
+.hero-greeting { color: rgba(255,255,255,0.7); font-size: 11px; display: block; }
+.hero-name     { color: #fff; font-size: 15px; font-weight: 600; display: block; }
+
+.notif-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  ion-icon { color: #fff; font-size: 18px; }
+}
+
+.hero-body { position: relative; }
+
+.role-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,0.15);
+  border: 0.5px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.9);
+  font-size: 11px; font-weight: 600;
+  padding: 3px 10px; border-radius: 20px;
+  margin-bottom: 8px;
+  ion-icon { font-size: 12px; }
+}
+
+.hero-body h1 {
+  color: #fff; font-size: 22px; font-weight: 600;
+  line-height: 1.2; margin-bottom: 4px;
+}
+.hero-body p { color: rgba(255,255,255,0.7); font-size: 13px; }
+
+.hero-date {
+  display: flex; align-items: center; gap: 5px;
+  color: rgba(255,255,255,0.5); font-size: 11px;
+  margin-top: 14px; text-transform: capitalize;
+  ion-icon { font-size: 12px; }
+}
+
+// ── Stats flotantes ───────────────────────────────────────────────────────────
+
+.stats-float {
+  display: flex; gap: 10px;
+  margin: -22px 16px 0;
+  position: relative; z-index: 2;
+  margin-bottom: 20px;
+}
+
+.stat-pill {
+  flex: 1;
+  background: var(--ion-background-color, #fff);
+  border: 1px solid var(--ion-color-light-shade);
+  border-radius: 16px;
+  padding: 14px 8px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+}
+
+.stat-ico {
+  width: 34px; height: 34px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  ion-icon { font-size: 16px; }
+}
+
+.stat-num { font-size: 20px; font-weight: 700; color: var(--ion-text-color); line-height: 1; }
+.stat-lbl { font-size: 10px; color: var(--ion-color-medium); text-align: center; }
+
+// ── Body ──────────────────────────────────────────────────────────────────────
+
+.home-body { padding: 4px 16px 100px; display: flex; flex-direction: column; gap: 16px; }
+
+.sec-header { display: flex; align-items: center; justify-content: space-between; }
+.sec-title  { font-size: 14px; font-weight: 600; color: var(--ion-text-color); }
+
+// ── Quick cards ───────────────────────────────────────────────────────────────
+
+.quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.qcard {
+  background: var(--ion-background-color, #fff);
+  border: 1px solid var(--ion-color-light-shade);
+  border-radius: 16px;
+  padding: 16px 14px;
+  display: flex; flex-direction: column; gap: 12px;
+  cursor: pointer; transition: opacity 0.15s;
+  &:active { opacity: 0.75; }
+}
+
+.qcard-icon {
+  width: 42px; height: 42px; border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  ion-icon { font-size: 20px; }
+}
+
+.qcard-body {
+  flex: 1;
+  p    { font-size: 13px; font-weight: 600; color: var(--ion-text-color); margin: 0 0 2px; }
+  span { font-size: 11px; color: var(--ion-color-medium); }
+}
+
+.qcard-arrow { color: var(--ion-color-medium); font-size: 14px; align-self: flex-end; }
+
+// ── Colores de íconos ─────────────────────────────────────────────────────────
+
+.s-blue   { background: #E6F1FB; ion-icon { color: #185FA5; } }
+.s-green  { background: #EAF3DE; ion-icon { color: #3B6D11; } }
+.s-amber  { background: #FAEEDA; ion-icon { color: #633806; } }
+.s-purple { background: #EEEDFE; ion-icon { color: #534AB7; } }
+.s-coral  { background: #FAECE7; ion-icon { color: #712B13; } }

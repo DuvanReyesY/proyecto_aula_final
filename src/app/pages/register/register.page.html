@@ -1,0 +1,154 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/usuarios" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ modoEdicion ? 'Editar Usuario' : 'Nuevo Usuario' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="register-content">
+
+  <!-- Hero banner -->
+  <div class="register-hero">
+    <div class="hero-icon-wrap">
+      <div class="hero-icon" [ngClass]="'hero-' + role">
+        <ion-icon [name]="getRoleIcon()"></ion-icon>
+      </div>
+      <div class="hero-rings">
+        <span class="ring ring-1"></span>
+        <span class="ring ring-2"></span>
+      </div>
+    </div>
+    <h1 class="hero-title">Registrar <span [ngClass]="'text-' + role">{{ getRoleLabel() }}</span></h1>
+    <p class="hero-sub">Completa los datos para crear la cuenta</p>
+  </div>
+
+  <!-- Ocultar selector de rol en modo edición (no se puede cambiar el rol) -->
+  <div class="seccion-card" *ngIf="rolActual === 'administrador' && !modoEdicion">
+    <p class="seccion-label">
+      <ion-icon name="shield-half-outline"></ion-icon>
+      Tipo de usuario
+    </p>
+    <div class="role-grid">
+      <button class="role-btn" [class.activo]="role==='administrador'" (click)="role='administrador'">
+        <div class="role-btn-icon rbg-admin"><ion-icon name="shield-outline"></ion-icon></div>
+        <span>Administrador</span>
+      </button>
+      <button class="role-btn" [class.activo]="role==='recepcionista'" (click)="role='recepcionista'">
+        <div class="role-btn-icon rbg-recep"><ion-icon name="headset-outline"></ion-icon></div>
+        <span>Recepcionista</span>
+      </button>
+      <button class="role-btn" [class.activo]="role==='veterinario'" (click)="role='veterinario'">
+        <div class="role-btn-icon rbg-vet"><ion-icon name="medkit-outline"></ion-icon></div>
+        <span>Veterinario</span>
+      </button>
+      <button class="role-btn" [class.activo]="role==='cliente'" (click)="role='cliente'">
+        <div class="role-btn-icon rbg-cliente"><ion-icon name="person-outline"></ion-icon></div>
+        <span>Cliente</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Datos personales -->
+  <div class="seccion-card">
+    <p class="seccion-label">
+      <ion-icon name="person-outline"></ion-icon>
+      Datos personales
+    </p>
+
+    <div class="campo-grupo">
+      <div class="campo">
+        <label>Nombre <span class="req">*</span></label>
+        <div class="input-wrap">
+          <ion-icon name="person-outline" class="input-icon"></ion-icon>
+          <input type="text" [(ngModel)]="user.Nombre" placeholder="Ej: Juan" />
+        </div>
+      </div>
+      <div class="campo">
+        <label>Apellido <span class="req">*</span></label>
+        <div class="input-wrap">
+          <ion-icon name="person-outline" class="input-icon"></ion-icon>
+          <input type="text" [(ngModel)]="user.Apellido" placeholder="Ej: Pérez" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Cédula (admin, recep, vet) -->
+    <div class="campo" *ngIf="role !== 'cliente'">
+      <label>Cédula <span class="req">*</span></label>
+      <div class="input-wrap">
+        <ion-icon name="card-outline" class="input-icon"></ion-icon>
+        <input type="text" [(ngModel)]="user.Cedula" placeholder="Número de cédula" />
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Teléfono</label>
+      <div class="input-wrap">
+        <ion-icon name="call-outline" class="input-icon"></ion-icon>
+        <input type="tel" [(ngModel)]="user.Telefono" placeholder="Ej: 3001234567" />
+      </div>
+    </div>
+
+    <!-- Especialidad (solo veterinario) -->
+    <div class="campo" *ngIf="role === 'veterinario'">
+      <label>Especialidad <span class="req">*</span></label>
+      <div class="input-wrap">
+        <ion-icon name="medkit-outline" class="input-icon"></ion-icon>
+        <input type="text" [(ngModel)]="user.Especialidad" placeholder="Ej: Cirugía, Dermatología..." />
+      </div>
+    </div>
+  </div>
+
+  <!-- Acceso -->
+  <div class="seccion-card">
+    <p class="seccion-label">
+      <ion-icon name="lock-closed-outline"></ion-icon>
+      Credenciales de acceso
+    </p>
+
+    <div class="campo">
+      <label>Correo electrónico <span class="req">*</span></label>
+      <div class="input-wrap">
+        <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+        <input type="email" [(ngModel)]="user.Correo" placeholder="correo@ejemplo.com" />
+      </div>
+    </div>
+
+    <div class="campo" *ngIf="!modoEdicion">
+      <label>Contraseña <span class="req">*</span></label>
+      <div class="input-wrap">
+        <ion-icon name="key-outline" class="input-icon"></ion-icon>
+        <input [type]="mostrarPassword ? 'text' : 'password'"
+               [(ngModel)]="user.Contrasena"
+               placeholder="Mínimo 6 caracteres" />
+        <ion-icon
+          [name]="mostrarPassword ? 'eye-off-outline' : 'eye-outline'"
+          class="input-icon-end"
+          (click)="mostrarPassword = !mostrarPassword">
+        </ion-icon>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón registrar -->
+  <div class="btn-wrapper">
+    <button
+      class="btn-registrar"
+      [ngClass]="'btn-' + role"
+      (click)="submit()"
+      [disabled]="registrando || guardando || cargando">
+      <ion-spinner *ngIf="registrando || guardando" name="crescent"></ion-spinner>
+      <ng-container *ngIf="!registrando && !guardando">
+        <ion-icon [name]="modoEdicion ? 'checkmark-circle-outline' : getRoleIcon()"></ion-icon>
+        <span>{{ modoEdicion ? 'Guardar cambios' : 'Registrar ' + getRoleLabel() }}</span>
+      </ng-container>
+    </button>
+
+    <p class="req-nota">
+      <span class="req">*</span> Campos obligatorios
+    </p>
+  </div>
+
+</ion-content>

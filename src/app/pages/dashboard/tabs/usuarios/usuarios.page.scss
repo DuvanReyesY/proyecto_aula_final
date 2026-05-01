@@ -1,0 +1,248 @@
+/* =============================================
+   USUARIOS PAGE — Estilos completos
+   ============================================= */
+
+:host {
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+/* ---- SEARCH HERO ---- */
+.search-hero {
+  background: var(--ion-color-primary);
+  padding: 12px 16px 18px;
+}
+
+.custom-searchbar {
+  --background: #fff;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  --color: #1f2937;
+  --placeholder-color: #9ca3af;
+  --icon-color: var(--ion-color-primary);
+  padding: 0 !important;
+  margin-bottom: 10px;
+}
+
+.filtros-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.filtros-scroll::-webkit-scrollbar { display: none; }
+
+.chip-filtro {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 2px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chip-filtro.activo {
+  background: #fff;
+  border-color: #fff;
+  color: var(--ion-color-primary);
+  font-weight: 700;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+.chip-filtro ion-icon { font-size: 14px; }
+
+.contador-resultados {
+  margin-top: 8px;
+  color: rgba(255,255,255,0.8);
+  font-size: 12px;
+  text-align: right;
+}
+
+/* ---- LOADING ---- */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 60px 20px;
+}
+.loading-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 48px;
+  box-shadow: var(--shadow);
+}
+.loading-card p { color: #6b7280; font-size: 14px; margin: 0; }
+
+/* ---- TABLA ---- */
+.tabla-wrapper {
+  margin: 16px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.tabla-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 700px;
+}
+
+.tabla-usuarios thead tr {
+  background: #f8fafc;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.tabla-usuarios th {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #6b7280;
+}
+
+.tabla-usuarios td {
+  padding: 13px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.fila-usuario:last-child td { border-bottom: none; }
+.fila-usuario:hover { background: #f8fafc; }
+
+.col-num { color: #9ca3af; font-weight: 600; width: 36px; }
+.col-contacto { min-width: 180px; }
+.col-detalles { min-width: 160px; }
+.col-acciones { min-width: 150px; }
+
+/* ---- AVATAR ---- */
+.usuario-info { display: flex; align-items: center; gap: 10px; }
+
+.avatar-circle {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.avatar-administrador { background: #d1fae5; color: #065f46; }
+.avatar-recepcionista { background: #fef3c7; color: #92400e; }
+.avatar-veterinario   { background: #dbeafe; color: #1e40af; }
+.avatar-cliente       { background: #ede9fe; color: #5b21b6; }
+
+.usuario-texto { display: flex; flex-direction: column; gap: 4px; }
+.usuario-texto strong { color: #111827; font-size: 13.5px; white-space: nowrap; }
+
+/* ---- BADGE ROL ---- */
+.badge-rol {
+  display: inline-block;
+  padding: 2px 10px; border-radius: 20px;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.3px; text-transform: uppercase;
+}
+.badge-administrador { background: #d1fae5; color: #065f46; }
+.badge-recepcionista { background: #fef3c7; color: #92400e; }
+.badge-veterinario   { background: #dbeafe; color: #1e40af; }
+.badge-cliente       { background: #ede9fe; color: #5b21b6; }
+
+/* ---- DATO LINEA ---- */
+.dato-linea {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; color: #4b5563; margin-bottom: 3px;
+}
+.dato-linea:last-child { margin-bottom: 0; }
+.dato-linea ion-icon { font-size: 13px; color: #9ca3af; flex-shrink: 0; }
+.dato-linea span {
+  white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; max-width: 200px;
+}
+
+.especialidad-tag span { color: #1d4ed8; font-weight: 500; }
+.especialidad-tag ion-icon { color: #3b82f6; }
+
+.supervisor-tag span { color: #059669; font-weight: 500; }
+.supervisor-tag ion-icon { color: #10b981; }
+
+.sin-detalle { color: #d1d5db; font-size: 16px; }
+
+/* ---- ESTADO ---- */
+.badge-estado {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; white-space: nowrap;
+}
+.punto-estado {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+.estado-activo  { background: #d1fae5; color: #065f46; border: 1.5px solid #6ee7b7; }
+.estado-activo .punto-estado { background: #10b981; }
+.estado-inactivo { background: #fee2e2; color: #991b1b; border: 1.5px solid #fca5a5; }
+.estado-inactivo .punto-estado { background: #ef4444; }
+
+/* ---- BOTONES ACCIÓN ---- */
+.acciones-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.btn-accion {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 6px 11px; border-radius: 8px; border: none;
+  font-size: 11.5px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+}
+.btn-accion:active { transform: scale(0.95); }
+.btn-accion ion-icon { font-size: 14px; }
+
+.btn-permisos { background: #dbeafe; color: #1d4ed8; }
+.btn-permisos:hover { background: #bfdbfe; }
+.btn-pausar   { background: #fef3c7; color: #92400e; }
+.btn-pausar:hover { background: #fde68a; }
+.btn-activar  { background: #d1fae5; color: #065f46; }
+.btn-activar:hover { background: #a7f3d0; }
+
+/* ---- EMPTY STATE ---- */
+.empty-state {
+  display: flex; flex-direction: column;
+  align-items: center; padding: 60px 20px; gap: 10px; color: #9ca3af;
+}
+.empty-state ion-icon { font-size: 60px; color: #e5e7eb; }
+.empty-state h3 { margin: 0; color: #374151; font-size: 18px; }
+.empty-state p  { margin: 0; font-size: 14px; }
+
+.fila-clickable {
+  cursor: pointer;
+  &:hover { background: rgba(var(--ion-color-primary-rgb), 0.05); }
+}
+
+.badge-en-linea {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(var(--ion-color-success-rgb), 0.12);
+  color: var(--ion-color-success);
+  font-size: 0.75rem;
+  font-weight: 600;
+  ion-icon { font-size: 0.85rem; }
+}
+
+
+.btn-editar { background: #f3e8ff; color: #7c3aed; }
+.btn-editar:hover { background: #e9d5ff; }

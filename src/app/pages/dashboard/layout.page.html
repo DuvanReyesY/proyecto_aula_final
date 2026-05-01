@@ -1,0 +1,16 @@
+
+<ion-app>  
+  <app-dashboard-header [rol]="rol"></app-dashboard-header>
+     <app-side-menu
+    [nombreUsuario]="nombreUsuario"
+    [rol]="rol"
+    [menuItems]="menuItems"
+    (logoutEvent)="logout()">
+  </app-side-menu>
+
+  
+  
+  <ion-page id="dashboard-content"></ion-page>
+  <ion-router-outlet></ion-router-outlet>
+<app-tab-bar [tabs]="tabs"></app-tab-bar>
+</ion-app>
