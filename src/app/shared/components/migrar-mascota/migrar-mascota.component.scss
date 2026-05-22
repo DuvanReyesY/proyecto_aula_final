@@ -1,0 +1,64 @@
+/* migrar-mascota.component.scss */
+.seccion-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ion-color-medium);
+  margin: 16px 0 6px;
+}
+
+.card-mascota {
+  margin: 0 0 16px;
+  border-radius: 12px;
+  box-shadow: none;
+  border: 1px solid var(--ion-color-light-shade);
+
+  .mascota-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    ion-avatar {
+      background: #fff8e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      ion-icon { font-size: 22px; }
+    }
+
+    .mascota-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      strong { font-size: 15px; }
+      span { font-size: 12px; color: var(--ion-color-medium); }
+    }
+  }
+}
+
+.avatar-iniciales {
+  background: var(--ion-color-tertiary-tint);
+  color: var(--ion-color-tertiary-shade);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.item-seleccionado {
+  --background: var(--ion-color-success-tint);
+}
+
+.destino-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 4px;
+  font-size: 13px;
+  color: var(--ion-color-medium);
+  margin-bottom: 8px;
+
+  strong { color: var(--ion-color-dark); }
+}

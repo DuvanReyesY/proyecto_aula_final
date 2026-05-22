@@ -54,11 +54,13 @@
 
 <ion-content class="mascotas-content">
 
+  <!-- Estado: cargando -->
   <div *ngIf="cargando" class="estado-vacio">
     <ion-spinner name="crescent" color="primary"></ion-spinner>
     <p>Cargando mascotas...</p>
   </div>
 
+  <!-- Estado: sin resultados -->
   <div *ngIf="!cargando && mascotasFiltradas.length === 0" class="estado-vacio">
     <ion-icon name="paw-outline" color="medium"></ion-icon>
     <p>No se encontraron mascotas</p>
@@ -67,7 +69,11 @@
     </ion-button>
   </div>
 
-  <ion-grid *ngIf="!cargando && mascotasFiltradas.length > 0" class="mascotas-grid">
+  <!-- Lista de mascotas -->
+  <ion-grid
+    *ngIf="!cargando && mascotasFiltradas.length > 0"
+    class="mascotas-grid"
+    style="padding-bottom: 80px;">
     <ion-row>
       <ion-col
         size="12"
@@ -79,14 +85,14 @@
           class="mascota-card"
           [class.mascota-inactiva]="mascota.estado === 'inactivo'"
           button
-          (click)="verDetalle(mascota)">
+          (click)="verDetalleMascota(mascota)"
+          [attr.aria-label]="'Ver detalles de ' + mascota.nombre">
 
           <div class="badge-estado" [class.badge-inactivo]="mascota.estado === 'inactivo'">
             {{ mascota.estado === 'activo' ? 'Activa' : 'Inactiva' }}
           </div>
 
           <div class="mascota-avatar">
-            <!-- fotoUrl no existe en la interfaz: siempre mostramos el placeholder con ícono -->
             <div class="avatar-placeholder">
               <ion-icon [name]="getIconoEspecie(mascota.especie)"></ion-icon>
             </div>
@@ -121,25 +127,19 @@
             </div>
           </ion-card-content>
 
+          <!-- Botones de acción -->
           <div class="mascota-acciones" (click)="$event.stopPropagation()">
-
-            <ion-button
-              *ngIf="puedeEditar"
-              fill="clear" size="small" color="primary"
+            <ion-button fill="clear" size="small" color="primary"
               (click)="editarMascota(mascota)">
               <ion-icon slot="icon-only" name="create-outline"></ion-icon>
             </ion-button>
 
-            <ion-button
-              *ngIf="rolActual === 'administrador'"
-              fill="clear" size="small" color="tertiary"
+            <ion-button fill="clear" size="small" color="tertiary"
               (click)="abrirMigracionDirecta(mascota)">
               <ion-icon slot="icon-only" name="swap-horizontal-outline"></ion-icon>
             </ion-button>
 
-            <ion-button
-              *ngIf="rolActual === 'administrador'"
-              fill="clear" size="small"
+            <ion-button fill="clear" size="small"
               [color]="mascota.estado === 'activo' ? 'warning' : 'success'"
               (click)="cambiarEstado(mascota)">
               <ion-icon slot="icon-only"
@@ -147,21 +147,27 @@
               </ion-icon>
             </ion-button>
 
-            <ion-button
-              *ngIf="rolActual === 'administrador'"
-              fill="clear" size="small" color="danger"
+            <ion-button fill="clear" size="small" color="danger"
               (click)="eliminarMascota(mascota)">
               <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
             </ion-button>
-
           </div>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 60px;">
-      <ion-fab-button color="primary" (click)="nuevaMascota()">
-        <ion-icon name="paw"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+
+  <ion-fab
+    *ngIf="puedeCrear"
+    vertical="bottom"
+    horizontal="end"
+    slot="fixed"
+    style="margin-bottom: 60px;">
+    <ion-fab-button color="primary" (click)="nuevaMascota()">
+      <ion-icon name="paw"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+
+
 </ion-content>

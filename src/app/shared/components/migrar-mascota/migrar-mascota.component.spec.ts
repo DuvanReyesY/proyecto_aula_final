@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { TabBarComponent } from './tab-bar.component';
+import { MigrarMascotaComponent } from './migrar-mascota.component';
 
-describe('TabBarComponent', () => {
-  let component: TabBarComponent;
-  let fixture: ComponentFixture<TabBarComponent>;
+describe('MigrarMascotaComponent', () => {
+  let component: MigrarMascotaComponent;
+  let fixture: ComponentFixture<MigrarMascotaComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TabBarComponent ],
+      declarations: [ MigrarMascotaComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TabBarComponent);
+    fixture = TestBed.createComponent(MigrarMascotaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

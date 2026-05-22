@@ -28,9 +28,6 @@ export interface PrivilegiosVeterinario {
 }
 
 export interface PrivilegiosCliente {
-  // Calendario y citas
-  verCalendario: boolean;
-  verHistorialCitasMascota: boolean;
 }
 
 export interface PrivilegiosAdministrador {
@@ -78,8 +75,7 @@ export function getPrivilegiosDefault(rol: string, uid: string): Privilegios {
       return {
         uid,
         rol: 'cliente',
-        verCalendario:             true,
-        verHistorialCitasMascota:  true,
+        //se odra asignar algo despues pero por ahora no tiene privilegios específicos
       };
 
     case 'administrador':

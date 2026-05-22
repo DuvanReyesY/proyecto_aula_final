@@ -8,6 +8,7 @@ import { UsuariosPageRoutingModule } from './usuarios-routing.module';
 
 import { UsuariosPage } from './usuarios.page';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { RegisterPageModule } from 'src/app/pages/register/register.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     FormsModule,
     IonicModule,
     UsuariosPageRoutingModule,
-    SharedModule 
+    SharedModule,
+    RegisterPageModule
   ],
   declarations: [UsuariosPage]
 })

@@ -9,9 +9,12 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Auth } from '@angular/fire/auth';
 import { inject } from '@angular/core';
-
+import { ModalController } from '@ionic/angular'; 
 import { MascotaService, Mascota } from 'src/app/core/services/mascota.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { RegisterMascotaPage } from 'src/app/pages/register-mascota/register-mascota.page';
+import { MigrarMascotaComponent } from 'src/app/shared/components/migrar-mascota/migrar-mascota.component';
+import { MascotaDetalleComponent } from 'src/app/shared/components/mascota-detalle/mascota-detalle.component';
 
 @Component({
   selector: 'app-mascotas',
@@ -39,6 +42,7 @@ export class MascotasPage implements OnInit, OnDestroy {
 
   private auth     = inject(Auth);
   private destroy$ = new Subject<void>();
+  
 
   constructor(
     private mascotaSvc:  MascotaService,
@@ -47,6 +51,7 @@ export class MascotasPage implements OnInit, OnDestroy {
     private alertCtrl:   AlertController,
     private toastCtrl:   ToastController,
     private loadingCtrl: LoadingController,
+    private modalCtrl:   ModalController,
   ) {}
 
   // ── Lifecycle ────────────────────────────────────────────────────
@@ -64,47 +69,47 @@ export class MascotasPage implements OnInit, OnDestroy {
 
   // ── Sesión / permisos ────────────────────────────────────────────
 
-  private async inicializarSesion() {
-    const user = this.auth.currentUser;
-    if (!user) return;
+private async inicializarSesion() {
+  // ✅ Leer desde localStorage (ya lo guardó AuthService en el login)
+  const uid = localStorage.getItem('uid');
+  const rol = localStorage.getItem('rol');
 
-    this.uidActual = user.uid;
+  if (!uid || !rol) return;
 
-    const roles = ['administradores', 'recepcionistas', 'veterinarios', 'clientes'];
-    const rolMap: Record<string, string> = {
-      administradores: 'administrador',
-      recepcionistas:  'recepcionista',
-      veterinarios:    'veterinario',
-      clientes:        'cliente',
-    };
+  this.uidActual = uid;
+  this.rolActual = rol;
 
-    for (const coleccion of roles) {
-      const data = await this.userSvc.getDocumentOnce(coleccion, user.uid);
-      if (data) {
-        this.rolActual = rolMap[coleccion];
-        break;
-      }
-    }
+  // ✅ Solo buscar privilegios, el rol ya lo tienes
+  const privDoc = await this.userSvc.getDocumentOnce('privilegios', uid);
+  this.privilegios = privDoc ?? {};
 
-    const privDoc = await this.userSvc.getDocumentOnce('privilegios', user.uid);
-    this.privilegios = privDoc ?? {};
+  this.puedeCrear = this.rolActual === 'administrador'
+    || (this.rolActual === 'recepcionista' && this.privilegios['crearMascotas'] === true);
 
-    this.puedeCrear = this.rolActual === 'administrador'
-      || (this.rolActual === 'recepcionista' && this.privilegios['crearMascotas'] === true);
-
-    this.puedeEditar = this.rolActual === 'administrador'
-      || (this.rolActual === 'recepcionista' && this.privilegios['editarMascotas'] === true);
-  }
+  this.puedeEditar = this.rolActual === 'administrador'
+    || (this.rolActual === 'recepcionista' && this.privilegios['editarMascotas'] === true);
+}
 
   // ── Carga de datos ───────────────────────────────────────────────
 
-  private cargarClientes() {
-    this.userSvc.getTodosLosUsuarios()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(users => {
-        this.clientes = users.filter(u => u.rol === 'cliente');
-      });
-  }
+private cargarClientes() {
+  this.userSvc.getTodosLosUsuarios()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(users => {
+      // Sin filtrar por rol para no perder datos
+      this.clientes = users;
+    });
+}
+
+getNombreCliente(idCliente: string): string {
+  const c = this.clientes.find(x => x.idCliente === idCliente);
+  if (!c) return '—';
+
+  // ✅ Firestore guarda Nombre/Apellido en mayúscula
+  const nombre   = c.Nombre   ?? c.nombre   ?? '';
+  const apellido = c.Apellido ?? c.apellido ?? '';
+  return `${nombre} ${apellido}`.trim() || '—';
+}
 
   private cargarMascotas() {
     this.cargando = true;
@@ -163,11 +168,7 @@ export class MascotasPage implements OnInit, OnDestroy {
 
   // ── Helpers template ─────────────────────────────────────────────
 
-  getNombreCliente(idCliente: string): string {
-    const c = this.clientes.find(x => x.idCliente === idCliente || x.uid === idCliente);
-    if (!c) return '—';
-    return `${c.nombre ?? ''} ${c.apellido ?? ''}`.trim();
-  }
+
 
   getIconoEspecie(especie: string): string {
     const iconos: Record<string, string> = {
@@ -187,25 +188,38 @@ export class MascotasPage implements OnInit, OnDestroy {
   // ── Navegación ───────────────────────────────────────────────────
 
   // En lugar de abrir un modal, navegar como usuarios:
-    nuevaMascota() {
-      this.router.navigate(['/layout/mascotas/register-mascota'], {
-        queryParams: { modo: 'crear' }
-      });
-    }
-
-    editarMascota(mascota: Mascota) {
-      this.router.navigate(['/layout/mascotas/register-mascota'], {
-        queryParams: { 
-          id: mascota.idMascota, 
-          idCliente: mascota.idCliente, 
-          modo: 'editar' 
-        }
-      });
-    }
-
-  verDetalle(mascota: Mascota) {
-    this.router.navigate(['/layout/mascotas', mascota.idMascota]);
+async nuevaMascota() {
+  console.log( 'Rol:', this.rolActual);
+  const modal = await this.modalCtrl.create({
+    component: RegisterMascotaPage,
+    componentProps: { modo: 'crear' },
+    breakpoints: [0, 1],
+    initialBreakpoint: 1,
+  });
+  await modal.present();
+  const { data } = await modal.onWillDismiss();
+  if (data?.guardado) {
+    this.mostrarToast('Mascota registrada exitosamente', 'success');
   }
+}
+
+async editarMascota(mascota: Mascota) {
+  const modal = await this.modalCtrl.create({
+    component: RegisterMascotaPage,
+    componentProps: {
+      modo: 'editar',
+      mascotaId: mascota.idMascota,
+      clienteId: mascota.idCliente,
+    },
+    breakpoints: [0, 1],
+    initialBreakpoint: 1,
+  });
+  await modal.present();
+  const { data } = await modal.onWillDismiss();
+  if (data?.guardado) {
+    this.mostrarToast('Mascota actualizada', 'success');
+  }
+}
 
 
 
@@ -289,21 +303,23 @@ export class MascotasPage implements OnInit, OnDestroy {
     await alert.present();
   }
 
-  async abrirMigracionDirecta(mascota: Mascota) {
-    handler: async (nuevoIdCliente: string) => {
-  if (!nuevoIdCliente) return;
-  try {
-    // 1. Crear en la nueva subcolección
-    const datosMigrados = { ...mascota, idCliente: nuevoIdCliente };
-    await this.mascotaSvc.registrarMascota(datosMigrados);
-    // 2. Eliminar de la subcolección anterior
-    await this.mascotaSvc.eliminarMascota(mascota.idCliente, mascota.idMascota);
-    this.mostrarToast(`${mascota.nombre} migrada correctamente`, 'success');
-  } catch {
-    this.mostrarToast('Error al migrar la mascota', 'danger');
-  }
-}
-  }
+
+    async abrirMigracionDirecta(mascota: Mascota) {
+      const modal = await this.modalCtrl.create({
+        component: MigrarMascotaComponent,
+        componentProps: { mascota },
+        breakpoints: [0, 0.85, 1],
+        initialBreakpoint: 0.85,
+      });
+
+      await modal.present();
+
+      const { data } = await modal.onWillDismiss();
+      if (data?.migrado) {
+        // El observable ya se actualiza solo si usas getTodas()
+        // pero si tienes lista local, recárgala aquí
+      }
+    }
 
   // ── Utilidades ───────────────────────────────────────────────────
 
@@ -331,5 +347,19 @@ export class MascotasPage implements OnInit, OnDestroy {
   return edad;
 }
 
+async verDetalleMascota(mascota: Mascota) {
+  const modal = await this.modalCtrl.create({
+    component: MascotaDetalleComponent,
+    componentProps: { mascota },
+    breakpoints: [0, 0.92, 1],
+    initialBreakpoint: 0.92,
+  });
+  await modal.present();
+
+  const { data } = await modal.onWillDismiss();
+  if (data?.editar) {
+    this.editarMascota(data.editar);
+  }
+}
 
 }

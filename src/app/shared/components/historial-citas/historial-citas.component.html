@@ -1,0 +1,139 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Historial de citas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrar()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="historial-content">
+
+  <!-- Hero -->
+  <div class="historial-hero" *ngIf="mascota">
+    <div class="hero-icon-wrap">
+      <div class="ring ring-1"></div>
+      <div class="ring ring-2"></div>
+      <div class="hero-icon">{{ emojiEspecie(mascota.especie) }}</div>
+    </div>
+    <h2 class="hero-title">{{ mascota.nombre }}</h2>
+    <p class="hero-sub">{{ mascota.especie | titlecase }} · {{ mascota.raza }}</p>
+    <div class="hero-chips">
+      <span class="hero-chip">
+        <ion-icon name="calendar-outline"></ion-icon>
+        {{ citas.length }} {{ citas.length === 1 ? 'cita' : 'citas' }}
+      </span>
+      <span class="hero-chip" *ngIf="mascota.fechaNacimiento">
+        <ion-icon name="gift-outline"></ion-icon>
+      </span>
+    </div>
+  </div>
+
+  <!-- Sin citas -->
+  <div class="empty-state" *ngIf="citas.length === 0">
+    <ion-icon name="calendar-outline"></ion-icon>
+    <p>Sin historial de citas</p>
+  </div>
+
+  <!-- Split panel -->
+  <div class="split-panel" *ngIf="citas.length > 0">
+
+    <!-- Panel izquierdo: lista -->
+    <div class="panel-left">
+      <div class="panel-left-header">
+        <ion-icon name="list-outline"></ion-icon>
+        <span>{{ citas.length }} {{ citas.length === 1 ? 'cita' : 'citas' }}</span>
+      </div>
+      <div
+        *ngFor="let c of citas"
+        class="cita-item"
+        [class.active]="citaSeleccionada?.idCita === c.idCita"
+        (click)="seleccionar(c)">
+        <div class="ci-tipo">{{ c.tipo }}</div>
+        <div class="ci-fecha">{{ formatearFecha(c.fecha) }}</div>
+        <span class="ci-badge" [ngClass]="badgeClase(c.estado)">{{ labelEstado(c.estado) }}</span>
+      </div>
+    </div>
+
+    <!-- Panel derecho: detalle -->
+    <div class="panel-right">
+
+      <!-- Sin selección -->
+      <div class="no-sel" *ngIf="!citaSeleccionada">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+        <span>Selecciona una cita<br>para ver el detalle</span>
+      </div>
+
+      <!-- Detalle -->
+      <ng-container *ngIf="citaSeleccionada as c">
+
+        <!-- Top -->
+        <div class="det-top">
+          <div class="det-icon" [style.background]="iconBg(c.estado)">
+            <ion-icon [name]="iconoCita(c.estado)" [style.color]="iconColor(c.estado)"></ion-icon>
+          </div>
+          <div class="det-top-info">
+            <div class="det-title">{{ c.tipo }}</div>
+            <div class="det-sub">{{ c.nombreVeterinario }}</div>
+          </div>
+        </div>
+
+        <!-- Pill estado -->
+        <span class="estado-pill" [ngClass]="pillClase(c.estado)">
+          <span class="ep-dot" [ngClass]="dotClase(c.estado)"></span>
+          <span class="ep-txt" [ngClass]="txtClase(c.estado)">{{ labelEstado(c.estado) }}</span>
+        </span>
+
+        <!-- Horario -->
+        <div class="sec-label">
+          <ion-icon name="time-outline"></ion-icon>
+          Horario
+        </div>
+        <div class="field-table">
+          <div class="field-row">
+            <span class="fk">Fecha</span>
+            <span class="fv">{{ formatearFecha(c.fecha) }}</span>
+          </div>
+          <div class="field-row">
+            <span class="fk">Hora</span>
+            <span class="fv">{{ c.horaInicio }} – {{ c.horaFin }}</span>
+          </div>
+        </div>
+
+        <!-- Finalizada: diagnóstico -->
+        <ng-container *ngIf="c.estado === 'finalizada'">
+          <div class="sec-label" style="margin-top:12px">
+            <ion-icon name="document-text-outline"></ion-icon>
+            Diagnóstico / Notas
+          </div>
+          <div class="diag-box" *ngIf="c.notas; else sinDiag">{{ c.notas }}</div>
+          <ng-template #sinDiag>
+            <div class="diag-box sin-diag">Sin diagnóstico registrado</div>
+          </ng-template>
+        </ng-container>
+
+        <!-- Estados sin detalle -->
+        <div class="no-det" *ngIf="c.estado === 'pendiente'">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>La cita aún no se ha realizado.<br>El diagnóstico estará disponible<br>una vez finalice.</span>
+        </div>
+        <div class="no-det" *ngIf="c.estado === 'confirmada'">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <span>Cita confirmada y próxima.<br>El diagnóstico estará disponible<br>después de la consulta.</span>
+        </div>
+        <div class="no-det" *ngIf="c.estado === 'cancelada'">
+          <ion-icon name="close-circle-outline"></ion-icon>
+          <span>Esta cita fue cancelada.<br>No hay detalles disponibles.</span>
+        </div>
+        <div class="no-det" *ngIf="c.estado === 'no_asistio'">
+          <ion-icon name="person-remove-outline"></ion-icon>
+          <span>El cliente no asistió<br>a esta cita.</span>
+        </div>
+
+      </ng-container>
+    </div>
+  </div>
+
+</ion-content>

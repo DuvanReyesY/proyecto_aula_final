@@ -12,8 +12,16 @@ const routes: Routes = [
     component: LayoutPage,
     children: [
       {
-        path: 'dashboard',                 // ✅ cambiado de 'home' a 'dashboard'
+        path: 'dashboard',                
         loadChildren: () => import('./tabs/home/home.module').then(m => m.HomePageModule)
+      },
+      {
+        path: 'cliente-home',
+        loadChildren: () => import('./tabs/cliente-home/cliente-home.module').then(m => m.ClienteHomePageModule)
+      },
+      {
+        path: 'veterinario-home',
+        loadChildren: () => import('./tabs/home-veterinario/home-veterinario.module').then(m => m.HomeVeterinarioPageModule)
       },
       {
         path: 'usuarios',

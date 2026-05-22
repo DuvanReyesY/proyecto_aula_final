@@ -19,6 +19,8 @@ export interface Mascota {
   peso: number;
   estado: 'activo' | 'inactivo';
   fechaRegistro: string;
+  idClienteAnterior?: string;
+  fechaMigracion?: string;
 }
 
 // ─── INTERFACES ──────────────────────────────────────────────────────────────
