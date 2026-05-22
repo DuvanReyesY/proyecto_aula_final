@@ -1,0 +1,103 @@
+<!-- SIN overlay ni panel wrapper, solo el contenido -->
+<div class="detalle-wrap" *ngIf="mascota">
+
+  <!-- Handle -->
+  <div class="detalle-handle"></div>
+
+  <!-- Botón cerrar -->
+  <button class="detalle-close" (click)="cerrar()">
+    <ion-icon name="close-outline"></ion-icon>
+  </button>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-photo-wrap">
+      <div class="ring ring-1"></div>
+      <div class="ring ring-2"></div>
+      <div class="hero-photo sin-foto">
+        {{ emojiEspecie(mascota.especie) }}
+      </div>
+      <div class="hero-badge">🐾</div>
+    </div>
+    <h2>{{ mascota.nombre }}</h2>
+    <p>{{ mascota.especie | titlecase }} · {{ mascota.raza }}</p>
+    <div class="hero-actions">
+      <ion-badge
+        [color]="mascota.estado === 'activo' ? 'success' : 'medium'"
+        class="badge-activo">
+        {{ mascota.estado === 'activo' ? 'Activa' : 'Inactiva' }}
+      </ion-badge>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <p class="section-label">
+    <ion-icon name="paw-outline"></ion-icon>
+    Datos básicos
+  </p>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon-wrap">
+        <ion-icon name="male-female-outline"></ion-icon>
+      </div>
+      <span class="label">Sexo</span>
+      <span class="value">{{ mascota.sexo | titlecase }}</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon-wrap">
+        <ion-icon name="barbell-outline"></ion-icon>
+      </div>
+      <span class="label">Peso</span>
+      <span class="value">{{ mascota.peso }} kg</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon-wrap">
+        <ion-icon name="color-palette-outline"></ion-icon>
+      </div>
+      <span class="label">Color</span>
+      <span class="value">{{ mascota.color || '—' }}</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon-wrap">
+        <ion-icon name="calendar-outline"></ion-icon>
+      </div>
+      <span class="label">Edad</span>
+      <span class="value">{{ calcularEdad(mascota.fechaNacimiento) }}</span>
+    </div>
+  </div>
+
+  <!-- Info adicional -->
+  <p class="section-label">
+    <ion-icon name="document-text-outline"></ion-icon>
+    Información adicional
+  </p>
+  <div class="seccion-card">
+    <div class="dato-fila">
+      <span class="dato-key">
+        <ion-icon name="ribbon-outline"></ion-icon> Raza
+      </span>
+      <span class="dato-val">{{ mascota.raza }}</span>
+    </div>
+    <div class="dato-fila">
+      <span class="dato-key">
+        <ion-icon name="finger-print-outline"></ion-icon> ID
+      </span>
+      <span class="dato-val">{{ mascota.idMascota }}</span>
+    </div>
+    <div class="dato-fila">
+      <span class="dato-key">
+        <ion-icon name="calendar-number-outline"></ion-icon> Registro
+      </span>
+      <span class="dato-val">{{ formatearFecha(mascota.fechaRegistro) }}</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-wrap">
+    <button class="btn-accion" (click)="abrirHistorial()">
+      <ion-icon name="time-outline"></ion-icon>
+      Ver historial de {{ mascota.nombre }}
+    </button>
+  </div>
+
+</div>

@@ -1,21 +1,35 @@
-// =============================================
-// MASCOTAS PAGE
-// =============================================
-
-.mascotas-content {
-  --background: #f1f5f9;
+// ── Variables locales ─────────────────────────────────────────────
+:host {
+  --teal-50:  #E6F4F4;
+  --teal-100: #B2DFDF;
+  --teal-400: #26A69A;
+  --teal-600: #00897B;
+  --teal-800: #00695C;
+  --teal-900: #004D40;
+  --surface:  #F0F9F8;
+  --dark:     #1A2E2C;
 }
 
-// ── Toolbar filtros ──────────────────────────
+// ── Contenido ─────────────────────────────────────────────────────
+.mascotas-content {
+  --background: var(--surface);
+}
+
+// ── Toolbar filtros ───────────────────────────────────────────────
 .toolbar-filtros {
-  --padding-top: 4px;
-  --padding-bottom: 8px;
+  --background: #fff;
+  --border-width: 0;
+  box-shadow: 0 2px 14px rgba(0, 105, 92, 0.08);
 
   ion-searchbar {
-    --border-radius: 12px;
-    --background: #fff;
-    --box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    padding: 0 12px;
+    --border-radius: 14px;
+    --background: var(--surface);
+    --box-shadow: none;
+    --placeholder-color: #9ca3af;
+    --icon-color: var(--teal-600);
+    padding: 4px 12px 0;
+    font-size: 14px;
+    font-weight: 600;
   }
 }
 
@@ -23,116 +37,165 @@
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding: 4px 12px 8px;
+  padding: 6px 12px 12px;
   scrollbar-width: none;
+
   &::-webkit-scrollbar { display: none; }
 
   ion-chip {
-    --background: #fff;
+    --background: var(--surface);
     --color: #6b7280;
-    border: 1.5px solid #e5e7eb;
+    border: 1.5px solid var(--teal-100);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     flex-shrink: 0;
+    border-radius: 20px;
+    height: 30px;
     transition: all 0.2s;
 
+    ion-icon {
+      font-size: 13px;
+      margin-right: 2px;
+      color: var(--teal-400);
+    }
+
     &.chip-activo {
-      --background: var(--ion-color-primary);
+      --background: var(--teal-600);
       --color: #fff;
-      border-color: var(--ion-color-primary);
+      border-color: var(--teal-600);
+      box-shadow: 0 3px 12px rgba(0, 137, 123, 0.35);
+
+      ion-icon { color: #fff; }
     }
   }
 }
 
-// ── Estado vacío / cargando ──────────────────
+// ── Estado vacío / cargando ───────────────────────────────────────
 .estado-vacio {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 80px 20px;
   gap: 16px;
 
   ion-icon {
-    font-size: 64px;
-    opacity: 0.3;
+    font-size: 72px;
+    opacity: 0.12;
+    color: var(--teal-600);
+  }
+
+  ion-spinner {
+    width: 40px;
+    height: 40px;
+    color: var(--teal-600);
   }
 
   p {
     color: #9ca3af;
     font-size: 15px;
+    font-weight: 600;
     margin: 0;
+  }
+
+  ion-button {
+    --border-radius: 14px;
+    --background: var(--teal-600);
+    --box-shadow: 0 4px 14px rgba(0, 137, 123, 0.3);
+    margin-top: 4px;
+    font-weight: 700;
   }
 }
 
-// ── Grid ─────────────────────────────────────
+// ── Grid ──────────────────────────────────────────────────────────
 .mascotas-grid {
-  padding: 12px 8px 24px;
+  padding: 16px 10px 100px;
 }
 
-// ── Card ─────────────────────────────────────
+// ── Card ──────────────────────────────────────────────────────────
 .mascota-card {
-  border-radius: 20px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  border-radius: 22px;
+  box-shadow: 0 4px 20px rgba(0, 105, 92, 0.10);
   overflow: visible;
   position: relative;
   margin: 0 0 4px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow 0.2s;
+  background: #fff;
+  border: 1.5px solid transparent;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 95px;
+    background: linear-gradient(135deg, var(--teal-600), var(--teal-900));
+    border-radius: 22px 22px 60% 60% / 22px 22px 44px 44px;
+    z-index: 0;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 105, 92, 0.18);
+    border-color: var(--teal-100);
+  }
 
   &:active {
-    transform: scale(0.98);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: scale(0.97);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   }
 
   &.mascota-inactiva {
-    opacity: 0.6;
-    filter: grayscale(40%);
+    opacity: 0.5;
+    filter: grayscale(60%);
   }
 }
 
-// ── Badge estado ─────────────────────────────
+// ── Badge estado ──────────────────────────────────────────────────
 .badge-estado {
   position: absolute;
   top: 12px;
-  right: 12px;
-  background: #10b981;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.22);
   color: #fff;
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 9px;
+  font-weight: 800;
   padding: 3px 10px;
   border-radius: 20px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  z-index: 2;
+  letter-spacing: 0.7px;
+  z-index: 3;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
 
   &.badge-inactivo {
-    background: #9ca3af;
+    background: rgba(0, 0, 0, 0.22);
+    border-color: rgba(255, 255, 255, 0.1);
   }
 }
 
-// ── Avatar ───────────────────────────────────
+// ── Avatar ────────────────────────────────────────────────────────
 .mascota-avatar {
   display: flex;
   justify-content: center;
-  padding: 20px 0 8px;
-
-  img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--ion-color-primary);
-  }
+  padding: 18px 0 6px;
+  position: relative;
+  z-index: 2;
 }
 
 .avatar-placeholder {
-  width: 80px;
-  height: 80px;
+  width: 82px;
+  height: 82px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(6px);
+  border: 3px solid rgba(255, 255, 255, 0.65);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s;
+
+  .mascota-card:hover & { transform: scale(1.05); }
 
   ion-icon {
     font-size: 36px;
@@ -140,64 +203,75 @@
   }
 }
 
-// ── Card header ──────────────────────────────
+// ── Card header ───────────────────────────────────────────────────
 ion-card-header {
-  padding-bottom: 4px;
+  padding: 10px 16px 4px;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 ion-card-title {
   font-size: 17px;
   font-weight: 800;
-  color: #1f2937;
+  color: var(--dark);
+  letter-spacing: -0.2px;
 }
 
 ion-card-subtitle {
   font-size: 12px;
   color: #6b7280;
   margin-top: 2px;
+  font-weight: 600;
+  text-transform: capitalize;
 }
 
-// ── Info chips ───────────────────────────────
+// ── Info chips ────────────────────────────────────────────────────
 .mascota-info {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   justify-content: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .info-chip {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #f3f4f6;
+  background: var(--teal-50);
   border-radius: 20px;
   padding: 4px 10px;
   font-size: 11px;
-  font-weight: 600;
-  color: #374151;
+  font-weight: 700;
+  color: var(--teal-800);
+  border: 1px solid var(--teal-100);
 
   ion-icon {
-    font-size: 13px;
-    color: var(--ion-color-primary);
+    font-size: 12px;
+    color: var(--teal-600);
   }
 }
 
-// ── Dueño ────────────────────────────────────
+// ── Dueño ─────────────────────────────────────────────────────────
 .mascota-dueno {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: #f9fafb;
-  border-radius: 10px;
-  padding: 8px 12px;
+  gap: 7px;
+  background: var(--teal-50);
+  border-radius: 12px;
+  padding: 9px 12px;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--teal-800);
+  font-weight: 600;
+  border: 1px solid var(--teal-100);
+  transition: background 0.15s;
+
+  .mascota-card:hover & { background: var(--teal-100); }
 
   ion-icon {
     font-size: 15px;
-    color: var(--ion-color-primary);
+    color: var(--teal-600);
     flex-shrink: 0;
   }
 
@@ -208,20 +282,39 @@ ion-card-subtitle {
   }
 }
 
-// ── Acciones ─────────────────────────────────
+// ── Acciones ──────────────────────────────────────────────────────
 .mascota-acciones {
   display: flex;
   justify-content: center;
-  gap: 4px;
-  padding: 8px 12px 12px;
-  border-top: 1px solid #f3f4f6;
-  margin-top: 4px;
+  gap: 2px;
+  padding: 8px 10px 14px;
+  border-top: 1px solid var(--teal-50);
+  margin-top: 8px;
+
+  ion-button {
+    --border-radius: 10px;
+    --padding-start: 10px;
+    --padding-end: 10px;
+    transition: transform 0.15s;
+
+    &:active { transform: scale(0.92); }
+
+    ion-icon { font-size: 18px; }
+  }
 }
 
-// ── Botón nueva ──────────────────────────────
+// ── Botón nueva ───────────────────────────────────────────────────
 .btn-nueva {
   --border-radius: 20px;
+  --background: var(--teal-600);
+  --box-shadow: 0 4px 14px rgba(0, 137, 123, 0.38);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 800;
   height: 34px;
+  letter-spacing: 0.2px;
 }
+
+// ── Modal mascota detalle — estilos globales ───────────────────────
+// Estos DEBEN estar en global.scss para que Ionic los aplique
+// ─────────────────────────────────────────────────────────────────
+// .modal-mascota-detalle { ... }  →  ver global.scss

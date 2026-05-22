@@ -1,0 +1,166 @@
+.dashboard-bg {
+  --background: #f4f6f9;
+}
+
+.top-dashboard-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+  align-items: start; /* ◄ EVITA QUE LAS TARJETAS SE OBLIGUEN A MEDIR LO MISMO DE ALTO */
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.perfil-resumen-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* ◄ EVITA EL HUECO EN BLANCO EN EL MEDIO */
+  gap: 16px;                   /* ◄ SEPARA LOS ELEMENTOS CON UN MARGEN CONSTANTE Y ELEGANTE */
+  border-left: 4px solid var(--ion-color-tertiary);
+}
+
+.input-item-box {
+  border: 1px solid #ddd; 
+  border-radius: 8px; 
+  margin-bottom: 5px;
+  --background: #fff;
+  --color: #1e293b;
+}
+
+.texto-principal { color: #1e293b !important; }
+.texto-mutado { color: #64748b !important; }
+
+.antecedentes-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+
+  .header-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    h3 { margin: 0; font-size: 1.1rem; color: #333; display: flex; align-items: center; gap: 8px; }
+  }
+
+  .antecedentes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+
+    .info-box {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 4px solid #008080;
+      strong { font-size: 0.85rem; color: #666; display: block; margin-bottom: 4px; }
+      p { margin: 0; font-size: 0.95rem; color: #222; font-weight: 500; }
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+  }
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  gap: 20px;
+  height: calc(100vh - 250px);
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
+
+.column {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .col-header {
+    background: var(--ion-color-light);
+    padding: 15px;
+    font-weight: bold;
+    color: #444;
+    border-bottom: 1px solid #eaeaea;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+  }
+}
+
+.col-center { border-top: 4px solid var(--ion-color-primary); }
+
+.citas-empty, .no-selection {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+  ion-icon { font-size: 3rem; color: #ccc; margin-bottom: 10px; }
+}
+
+.cita-item {
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover { background: #f9f9f9; transform: translateY(-2px); }
+  &.active { background: #eef4ff; border-color: var(--ion-color-primary); }
+  .cita-fecha { font-weight: bold; font-size: 0.9rem; margin-bottom: 4px; }
+  .cita-vet { font-size: 0.8rem; color: #666; margin-bottom: 6px; }
+}
+
+.cita-item.upcoming {
+  cursor: default;
+  &:hover { transform: none; background: transparent; }
+  border-left: 4px solid var(--ion-color-tertiary);
+}
+
+.detalle-content {
+  padding: 20px;
+  overflow-y: auto;
+
+  .resumen-cita {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: var(--ion-color-primary); }
+    p { margin: 5px 0; font-size: 0.9rem; }
+  }
+
+  .diag-section {
+    margin-bottom: 15px;
+    h4 { margin: 0 0 5px 0; font-size: 0.9rem; color: #666; text-transform: uppercase; }
+    p { margin: 0; font-size: 0.95rem; color: #222; background: #fff; padding: 10px; border: 1px solid #eee; border-radius: 6px; }
+  }
+
+  .btn-pdf { margin-top: 20px; --border-radius: 8px; }
+}

@@ -37,9 +37,13 @@ async login(email: string, password: string) {
 
   async logout() {
     await signOut(this.auth);
-    localStorage.removeItem('uid');
-    localStorage.removeItem('rol');
-    this.router.navigate(['/login']);
+    
+    // Limpiamos todo rastro de almacenamiento
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // Forzamos una recarga limpia hacia el login, vaciando la memoria RAM de Angular
+    window.location.href = '/login';
   }
 
   getRolActual(): string | null {

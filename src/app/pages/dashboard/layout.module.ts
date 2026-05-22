@@ -12,8 +12,12 @@ const routes: Routes = [
     component: LayoutPage,
     children: [
       {
-        path: 'dashboard',                 // ✅ cambiado de 'home' a 'dashboard'
+        path: 'dashboard',                
         loadChildren: () => import('./tabs/home/home.module').then(m => m.HomePageModule)
+      },
+      {
+        path: 'cliente-home',
+        loadChildren: () => import('./tabs/cliente-home/cliente-home.module').then(m => m.ClienteHomePageModule)
       },
       {
         path: 'usuarios',
@@ -39,6 +43,10 @@ const routes: Routes = [
       {
         path: 'reportes',
         loadChildren: () => import('./tabs/reportes/reportes.module').then(m => m.ReportesPageModule)
+      },
+      {
+        path: 'expediente/:idCliente/:idMascota',
+        loadChildren: () => import('./tabs/expediente/expediente.module').then(m => m.ExpedientePageModule)
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }  // ✅ cambiado de 'home'
     ]

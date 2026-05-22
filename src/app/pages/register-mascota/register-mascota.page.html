@@ -1,7 +1,9 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/layout/mascotas" text=""></ion-back-button>
+      <ion-button fill="clear" (click)="cerrarModal(false)">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>{{ modoEdicion ? 'Editar Mascota' : 'Nueva Mascota' }}</ion-title>
     <ion-buttons slot="end">
@@ -13,12 +15,28 @@
 </ion-header>
 
 <ion-content class="nueva-mascota-content">
+
+  <!-- ── Hero ── -->
+  <div class="mascota-hero">
+    <div class="hero-icon-mascota">
+      <ion-icon name="paw"></ion-icon>
+    </div>
+    <h2 class="hero-title-mascota">
+      {{ modoEdicion ? 'Editar mascota' : 'Nueva mascota' }}
+    </h2>
+    <p class="hero-sub-mascota">
+      {{ modoEdicion ? 'Actualiza los datos del paciente' : 'Registra un nuevo paciente' }}
+    </p>
+  </div>
+
   <form [formGroup]="form" class="form-mascota">
 
-    <!-- Propietario -->
+    <!-- ── Propietario ── -->
     <div class="form-section">
       <div class="section-header">
-        <ion-icon name="person-outline"></ion-icon>
+        <div class="section-icon-wrap">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
         <h3>Propietario</h3>
       </div>
 
@@ -70,12 +88,14 @@
           </div>
         </ng-template>
       </div>
-    </div> <!-- ✅ cierra form-section Propietario -->
+    </div>
 
-    <!-- Información básica -->
+    <!-- ── Información básica ── -->
     <div class="form-section">
       <div class="section-header">
-        <ion-icon name="paw-outline"></ion-icon>
+        <div class="section-icon-wrap">
+          <ion-icon name="paw-outline"></ion-icon>
+        </div>
         <h3>Información básica</h3>
       </div>
 
@@ -163,12 +183,14 @@
           autocapitalize="words">
         </ion-input>
       </ion-item>
-    </div> <!-- ✅ cierra form-section Información básica -->
+    </div>
 
-    <!-- Datos físicos -->
+    <!-- ── Datos físicos ── -->
     <div class="form-section">
       <div class="section-header">
-        <ion-icon name="fitness-outline"></ion-icon>
+        <div class="section-icon-wrap">
+          <ion-icon name="fitness-outline"></ion-icon>
+        </div>
         <h3>Datos físicos</h3>
       </div>
 
@@ -184,26 +206,25 @@
         <ion-icon name="alert-circle-outline"></ion-icon> El peso es requerido
       </div>
 
-    <!-- Fecha de nacimiento -->
-    <ion-item class="campo-item" lines="none">
-      <ion-label position="stacked">
-        Fecha de nacimiento <span class="req">*</span>
-      </ion-label>
-      <input
-        type="date"
-        class="fecha-input-nativa"
-        [max]="hoySimple"
-        [value]="fc['fechaNacimiento'].value"
-        (change)="onFechaNativaChange($event)"
-      />
-    </ion-item>
-
-    <div *ngIf="fc['fechaNacimiento'].invalid && formSubmitted" class="error-msg">
-      <ion-icon name="alert-circle-outline"></ion-icon> La fecha de nacimiento es requerida
+      <!-- Fecha de nacimiento -->
+      <ion-item class="campo-item" lines="none">
+        <ion-label position="stacked">
+          Fecha de nacimiento <span class="req">*</span>
+        </ion-label>
+        <input
+          type="date"
+          class="fecha-input-nativa"
+          [max]="hoySimple"
+          [value]="fc['fechaNacimiento'].value"
+          (change)="onFechaNativaChange($event)"
+        />
+      </ion-item>
+      <div *ngIf="fc['fechaNacimiento'].invalid && formSubmitted" class="error-msg">
+        <ion-icon name="alert-circle-outline"></ion-icon> La fecha de nacimiento es requerida
+      </div>
     </div>
-    </div> <!-- ✅ cierra form-section Datos físicos -->
 
-<!-- Botón guardar -->
+    <!-- ── Botón guardar ── -->
     <div class="btn-guardar-wrap">
       <ion-button expand="block" shape="round" color="primary"
         [disabled]="guardando" (click)="guardar()">

@@ -1,0 +1,605 @@
+// ══════════════════════════════════════════════════════════════════
+// CITAS PAGE — Diseño consistente con register, optimizado móvil
+// ══════════════════════════════════════════════════════════════════
+
+// ── Variables ──────────────────────────────────────────────────────
+$blue:        #3b82f6;
+$blue-dark:   #2563eb;
+$blue-light:  #dbeafe;
+$green:       #10b981;
+$red:         #ef4444;
+$red-light:   #fee2e2;
+$orange:      #f59e0b;
+$orange-light:#fef3c7;
+$purple:      #8b5cf6;
+$purple-light:#ede9fe;
+$teal:        #0891b2;
+
+$border:      #e5e7eb;
+$bg:          #ffffff;
+$bg-page:     #f1f5f9;
+$bg-2:        #f9fafb;
+$text-1:      #1f2937;
+$text-2:      #6b7280;
+$text-3:      #9ca3af;
+$radius-sm:   8px;
+$radius-md:   12px;
+$radius-lg:   16px;
+$shadow-sm:   0 2px 8px rgba(0,0,0,0.06);
+$shadow-md:   0 4px 16px rgba(0,0,0,0.10);
+
+// ── Página ─────────────────────────────────────────────────────────
+.cal-content {
+  --background: #{$bg-page};
+}
+
+.cal-ion-header ion-toolbar {
+  --background: #{$bg};
+  --border-width: 0 0 1px 0;
+  --border-color: #{$border};
+  --padding-start: 16px;
+
+  ion-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: $text-1;
+  }
+}
+
+// ── FAB ────────────────────────────────────────────────────────────
+ion-fab-button {
+  --background: #{$blue};
+  --background-hover: #{$blue-dark};
+  --box-shadow: 0 4px 14px rgba(59,130,246,0.45);
+  --border-radius: 14px;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MODALES — base compartida
+// ══════════════════════════════════════════════════════════════════
+.modal-cita,
+.modal-detalle {
+  // breakpoint 1 = pantalla completa, sin border-radius superior
+  --border-radius: 0;
+  --background: #{$bg-page};
+
+  ion-toolbar {
+    --background: #{$bg};
+    --border-width: 0 0 1px 0;
+    --border-color: #{$border};
+    --padding-start: 16px;
+    --padding-end: 8px;
+  }
+
+  ion-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: $text-1;
+  }
+
+  ion-button {
+    --color: #{$text-2};
+  }
+}
+
+.modal-content {
+  --background: #{$bg-page};
+}
+
+// ── Secciones tipo card (igual que register) ───────────────────────
+.form-card {
+  background: $bg;
+  margin: 10px 14px 0;
+  border-radius: $radius-lg;
+  padding: 16px;
+  box-shadow: $shadow-sm;
+}
+
+.form-card-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: $text-2;
+  margin: 0 0 14px;
+
+  ion-icon {
+    font-size: 14px;
+    color: $blue;
+  }
+}
+
+// ── Quick tip ─────────────────────────────────────────────────────
+.quick-tip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: $orange-light;
+  border-radius: $radius-sm;
+  padding: 10px 12px;
+  margin: 10px 14px 0;
+  border: 1px solid #fde68a;
+
+  ion-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    color: $orange;
+  }
+
+  span {
+    font-size: 12px;
+    color: #92400e;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+}
+
+// ── Grupos de formulario ──────────────────────────────────────────
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+  &:last-child { margin-bottom: 0; }
+}
+
+.field-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: $text-1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .required { color: $red; }
+
+  .field-locked {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 500;
+    color: $text-3;
+    margin-left: 4px;
+
+    ion-icon { font-size: 11px; }
+  }
+}
+
+// ── Inputs ────────────────────────────────────────────────────────
+.custom-select,
+.custom-input,
+.custom-textarea {
+  border: 1.5px solid $border;
+  border-radius: $radius-sm;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: $text-1;
+  background: $bg-2;
+  width: 100%;
+  appearance: none;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  box-sizing: border-box;
+
+  &::placeholder { color: $text-3; }
+
+  &:focus {
+    border-color: $blue;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+    background: $bg;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f3f4f6;
+  }
+}
+
+.custom-select-wrap {
+  position: relative;
+
+  &::after {
+    content: '▾';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: $text-3;
+    pointer-events: none;
+  }
+}
+
+.readonly-input {
+  color: $text-2;
+  cursor: default;
+  background: #f3f4f6 !important;
+  border-color: $border !important;
+}
+
+.custom-textarea {
+  resize: vertical;
+  min-height: 64px;
+  line-height: 1.5;
+}
+
+// ── Validación fecha ──────────────────────────────────────────────
+.input-error {
+  border-color: $red !important;
+  background: $red-light !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.10) !important;
+}
+
+.field-error {
+  font-size: 11px;
+  color: $red;
+  font-weight: 600;
+}
+
+// ── Slots de hora ─────────────────────────────────────────────────
+.slots-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.slots-hint {
+  font-weight: 500;
+  color: $blue;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.slot-chip {
+  padding: 6px 11px;
+  border-radius: 20px;
+  border: 1.5px solid $border;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  background: $bg;
+  color: $text-1;
+  transition: all 0.15s;
+  user-select: none;
+
+  &:hover:not(.ocupado) {
+    background: $blue-light;
+    border-color: $blue;
+    color: $blue-dark;
+  }
+
+  &.active {
+    background: $blue;
+    color: #fff;
+    border-color: transparent;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+  }
+
+  &.ocupado {
+    background: #f3f4f6;
+    color: $text-3;
+    border-color: $border;
+    cursor: not-allowed;
+    text-decoration: line-through;
+    pointer-events: none;
+    opacity: 0.55;
+  }
+}
+
+.slots-leyenda {
+  display: flex;
+  gap: 14px;
+  margin-top: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sl-item {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: $text-2;
+  font-weight: 500;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &.sl-libre::before { background: $bg; border: 1.5px solid $border; }
+  &.sl-sel::before   { background: $blue; box-shadow: 0 1px 4px rgba(59,130,246,0.4); }
+  &.sl-ocup::before  { background: #d1d5db; }
+}
+
+// ── Chips de tipo ─────────────────────────────────────────────────
+.tipo-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tipo-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid $border;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  background: $bg;
+  color: $text-2;
+  transition: all 0.15s;
+
+  &:hover { background: $bg-2; }
+  &:active { transform: scale(0.96); }
+
+  &.c-consulta.active { background: $blue-light;    color: $blue-dark;  border-color: $blue;   font-weight: 700; box-shadow: 0 2px 8px rgba(59,130,246,0.2); }
+  &.c-vacuna.active   { background: #d1fae5;         color: #065f46;     border-color: $green;  font-weight: 700; box-shadow: 0 2px 8px rgba(16,185,129,0.2); }
+  &.c-cirugia.active  { background: $red-light;      color: #991b1b;     border-color: $red;    font-weight: 700; box-shadow: 0 2px 8px rgba(239,68,68,0.2); }
+  &.c-urgencia.active { background: $orange-light;   color: #92400e;     border-color: $orange; font-weight: 700; box-shadow: 0 2px 8px rgba(245,158,11,0.2); }
+  &.c-control.active  { background: $purple-light;   color: #5b21b6;     border-color: $purple; font-weight: 700; box-shadow: 0 2px 8px rgba(139,92,246,0.2); }
+}
+
+// ── Select de estado ──────────────────────────────────────────────
+.estado-select-wrap {
+  position: relative;
+
+  &::after {
+    content: '▾';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: $text-3;
+    pointer-events: none;
+  }
+}
+
+// ── Footer del modal (ion-footer) ─────────────────────────────────
+ion-footer.modal-footer-custom {
+  padding: 12px 14px calc(16px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  background: $bg;
+  border-top: 1px solid $border;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+  --background: #{$bg};
+}
+
+.btn-cancel-custom {
+  background: none;
+  border: 1.5px solid $border;
+  border-radius: $radius-sm;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: $text-2;
+  font-family: inherit;
+  transition: all 0.15s;
+
+  &:hover {
+    background: $bg-2;
+    border-color: #d1d5db;
+  }
+  &:active { transform: scale(0.97); }
+}
+
+.btn-save-custom {
+  background: linear-gradient(135deg, $blue, $blue-dark);
+  color: #fff;
+  border: none;
+  border-radius: $radius-sm;
+  padding: 10px 22px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(59,130,246,0.35);
+
+  &:hover    { box-shadow: 0 6px 18px rgba(59,130,246,0.45); transform: translateY(-1px); }
+  &:active   { transform: scale(0.97); }
+  &:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; transform: none; }
+
+  ion-icon { font-size: 15px; }
+}
+
+.btn-disabled-custom {
+  background: linear-gradient(135deg, #9ca3af, #6b7280) !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  opacity: 0.8;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MODAL DETALLE
+// ══════════════════════════════════════════════════════════════════
+.detail-hero {
+  background: linear-gradient(135deg, $blue, $blue-dark);
+  margin: 0 0 16px;
+  padding: 20px 16px;
+  border-radius: 0 0 $radius-lg $radius-lg;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  align-self: flex-start;
+
+  &.badge-cita-consulta { background: $blue-light;  color: $blue-dark; }
+  &.badge-cita-vacuna   { background: #d1fae5;       color: #065f46; }
+  &.badge-cita-cirugia  { background: $red-light;    color: #991b1b; }
+  &.badge-cita-urgencia { background: $orange-light; color: #92400e; }
+  &.badge-cita-control  { background: $purple-light; color: #5b21b6; }
+}
+
+.detail-card {
+  background: $bg;
+  margin: 0 14px 10px;
+  border-radius: $radius-lg;
+  padding: 4px 16px;
+  box-shadow: $shadow-sm;
+}
+
+.detail-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom: 1px solid $border;
+  font-size: 13px;
+
+  &:last-child { border-bottom: none; }
+}
+
+.detail-label {
+  color: $text-2;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 86px;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+.detail-val {
+  color: $text-1;
+  flex: 1;
+  font-weight: 500;
+
+  &.notas-val {
+    font-size: 12px;
+    line-height: 1.6;
+    white-space: pre-line;
+    color: $text-2;
+    font-weight: 400;
+  }
+}
+
+// ── Badges de estado ──────────────────────────────────────────────
+ion-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: capitalize;
+}
+// ── Sección Diagnóstico ───────────────────────────────────────────
+.diagnostico-section {
+  // 14px de margen lateral para que coincida exactamente con la .detail-card
+  margin: 0 14px 16px; 
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+
+  // Estilo para que los textos de aviso sean legibles y no blancos
+  .diag-hint {
+    margin: 0;
+    font-size: 12px;
+    color: $text-2; // Usa tu variable de gris oscuro (#6b7280)
+    font-weight: 500;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// RESPONSIVE MÓVIL
+// ══════════════════════════════════════════════════════════════════
+@media (max-width: 600px) {
+
+  .form-card,
+  .detail-card
+  .diagnostico-section {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 14px 12px;
+  }
+
+  .quick-tip {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  // 2 col → 1 col en móvil
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  // Slots más grandes para tacto
+  .slot-chip {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  // Footer apilado en móvil
+  ion-footer.modal-footer-custom {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .btn-save-custom,
+  .btn-cancel-custom {
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  // Chips de tipo más compactos
+  .tipo-chip {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  // Modal detalle label más ancho
+  .detail-label {
+    width: 76px;
+  }
+}
+
+@media (max-width: 380px) {
+  .slots-grid { gap: 5px; }
+  .slot-chip  { padding: 7px 9px; font-size: 11px; }
+  .tipo-chips { gap: 5px; }
+}
