@@ -2,7 +2,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController, LoadingController } from '@ionic/angular';
-import { Auth, onAuthStateChanged } from '@angular/fire/auth';
+import { Auth } from '@angular/fire/auth';
 import { inject } from '@angular/core';
 import { Subscription, take } from 'rxjs';
 
@@ -11,8 +11,6 @@ import { UserService } from 'src/app/core/services/user.service';
 import { MascotaService, Mascota } from 'src/app/core/services/mascota.service';
 import { ModalController } from '@ionic/angular';
 import { ReasignarVeterinarioComponent } from 'src/app/shared/components/reasignar-veterinario/reasignar-veterinario.component';
-import { DiagnosticoModalComponent } from 'src/app/shared/components/diagnostico-modal/diagnostico-modal.component';
-import { DiagnosticoService } from 'src/app/core/services/diagnostico.service';
 
 @Component({
   selector: 'app-cita',
@@ -77,17 +75,16 @@ export class CitaPage implements OnInit, OnDestroy {
     private toastCtrl:   ToastController,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
-    private diagnosticoSvc: DiagnosticoService,
   ) {}
-  // ── Diagnóstico ──────────────────────────────────────────────
-  existeDiagnostico: boolean = false;
 
+  // ── Lifecycle ─────────────────────────────────────────────────
 
   async ngOnInit() {
     this.generarSlots();
     await this.inicializarSesion();
     await this.cargarListas();
     this.cargarCitasEnCalendario();
+
     this.subs.push(
       this.route.queryParams.subscribe(async params => {
         if (params['modo'] === 'editar' && params['id']) {
@@ -100,77 +97,6 @@ export class CitaPage implements OnInit, OnDestroy {
     );
   }
 
-
-  async showDetail(cita: Cita) {
-    this.citaDetalle      = cita;
-    this.modalDetalleOpen = true;
-    // Consultar si existe diagnóstico
-    if (cita && cita.idCita) {
-      const diag = await this.diagnosticoSvc.getOnce(cita.idCita);
-      this.existeDiagnostico = !!diag;
-    } else {
-      this.existeDiagnostico = false;
-    }
-  }
-
-  esVeterinarioAsignado(): boolean {
-    if (!this.citaDetalle) return false;
-    return this.rolActual === 'veterinario' && this.citaDetalle.idVeterinario === this.uidActual;
-  }
-
-  async abrirDiagnosticoModal(soloLectura: boolean) {
-    if (!this.citaDetalle) return;
-
-    const idCita = this.citaDetalle.idCita;
-
-    // Al abrir: pendiente → en_proceso
-    if (!soloLectura) {
-      await this.citaSvc.cambiarEstado(idCita, 'en_proceso');
-      this.citaDetalle = { ...this.citaDetalle, estado: 'en_proceso' };
-    }
-
-    const modal = await this.modalCtrl.create({
-      component: DiagnosticoModalComponent,
-      componentProps: {
-        cita:              this.citaDetalle,
-        nombreVeterinario: this.nombreRecepcionista,
-        soloLectura,
-      },
-      breakpoints:       [0, 1],
-      initialBreakpoint: 1,
-      backdropDismiss:   false,
-      cssClass: 'modal-diagnostico-desktop'
-    });
-
-    await modal.present();
-    const { data } = await modal.onWillDismiss();
-
-    if (!soloLectura) {
-      if (data?.guardado) {
-        // Guardó diagnóstico → finalizada
-        await this.citaSvc.cambiarEstado(idCita, 'finalizada');
-        this.citaDetalle = { ...this.citaDetalle, estado: 'finalizada' };
-        this.existeDiagnostico = true;
-      } else {
-        // Canceló sin guardar → cancelada
-        await this.citaSvc.cambiarEstado(idCita, 'cancelada');
-        this.citaDetalle = { ...this.citaDetalle, estado: 'cancelada' };
-      }
-      // Reflejar en el calendario
-      this.todasCitas = this.todasCitas.map(c =>
-        c.idCita === idCita ? { ...c, estado: this.citaDetalle!.estado } : c
-      );
-    } else {
-      const diag = await this.diagnosticoSvc.getOnce(idCita);
-      this.existeDiagnostico = !!diag;
-    }
-  }
-
-  // ── Lifecycle ─────────────────────────────────────────────────
-
-
-  // (Eliminada implementación duplicada de ngOnInit)
-
   ngOnDestroy() {
     this.subs.forEach(s => s.unsubscribe());
   }
@@ -180,15 +106,9 @@ export class CitaPage implements OnInit, OnDestroy {
 private yaRevisó = false;
 
 private cargarCitasEnCalendario() {
-  // El veterinario solo ve sus propias citas; los demás roles ven todas
-  const obs$ = this.rolActual === 'veterinario'
-    ? this.citaSvc.getPorVeterinario(this.uidActual)
-    : this.citaSvc.getTodas();
-
   this.subs.push(
-    obs$.subscribe(citas => {
-      // Spread para crear nueva referencia — Angular detecta el cambio en el @Input del hijo
-      this.todasCitas = [...citas];
+    this.citaSvc.getTodas().subscribe(citas => {
+      this.todasCitas = citas;
       if (!this.yaRevisó) {
         this.yaRevisó = true;
         this.citaSvc.revisarVencidas();
@@ -229,9 +149,12 @@ private cargarCitasEnCalendario() {
     this.horasSeleccionadas = [];
   }
 
-
   // ── Detalle ───────────────────────────────────────────────────
-  // showDetail fusionado arriba
+
+  showDetail(cita: Cita) {
+    this.citaDetalle      = cita;
+    this.modalDetalleOpen = true;
+  }
 
   closeDetail() {
     this.modalDetalleOpen = false;
@@ -428,30 +351,25 @@ generarSlots() {
 
   // ── Sesión ────────────────────────────────────────────────────
 
-  private inicializarSesion(): Promise<void> {
-    return new Promise(resolve => {
-      const unsub = onAuthStateChanged(this.auth, async user => {
-        unsub(); // solo necesitamos el primer emit
-        if (!user) { resolve(); return; }
-        this.uidActual = user.uid;
-        const roles  = ['administradores', 'recepcionistas', 'veterinarios', 'clientes'];
-        const rolMap: Record<string, string> = {
-          administradores: 'administrador',
-          recepcionistas:  'recepcionista',
-          veterinarios:    'veterinario',
-          clientes:        'cliente',
-        };
-        for (const col of roles) {
-          const data = await this.userSvc.getDocumentOnce(col, user.uid);
-          if (data) {
-            this.rolActual           = rolMap[col];
-            this.nombreRecepcionista = `${data.Nombre ?? ''} ${data.Apellido ?? ''}`.trim();
-            break;
-          }
-        }
-        resolve();
-      });
-    });
+  private async inicializarSesion() {
+    const user = this.auth.currentUser;
+    if (!user) return;
+    this.uidActual = user.uid;
+    const roles  = ['administradores', 'recepcionistas', 'veterinarios', 'clientes'];
+    const rolMap: Record<string, string> = {
+      administradores: 'administrador',
+      recepcionistas:  'recepcionista',
+      veterinarios:    'veterinario',
+      clientes:        'cliente',
+    };
+    for (const col of roles) {
+      const data = await this.userSvc.getDocumentOnce(col, user.uid);
+      if (data) {
+        this.rolActual           = rolMap[col];
+        this.nombreRecepcionista = `${data.Nombre ?? ''} ${data.Apellido ?? ''}`.trim();
+        break;
+      }
+    }
   }
 
   // ── Carga de listas ───────────────────────────────────────────
@@ -612,6 +530,7 @@ generarSlots() {
     const map: Record<string, string> = {
       pendiente:  'warning',
       en_proceso: 'primary',
+      confirmada: 'success',
       finalizada: 'medium',
       cancelada:  'danger',
       no_asistio: 'dark',

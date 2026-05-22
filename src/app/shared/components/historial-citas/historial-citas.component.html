@@ -102,75 +102,16 @@
           </div>
         </div>
 
-        <!-- Finalizada: diagnósticos colapsables -->
+        <!-- Finalizada: diagnóstico -->
         <ng-container *ngIf="c.estado === 'finalizada'">
           <div class="sec-label" style="margin-top:12px">
             <ion-icon name="document-text-outline"></ion-icon>
-            Diagnósticos
+            Diagnóstico / Notas
           </div>
-
-          <div class="diag-loading" *ngIf="cargandoDiag">
-            <ion-spinner name="dots" style="width:18px;height:18px"></ion-spinner>
-            <span>Cargando diagnósticos...</span>
-          </div>
-
-          <div class="diag-box sin-diag" *ngIf="!cargandoDiag && diagnosticos.length === 0">
-            Sin diagnóstico registrado
-          </div>
-
-          <div class="diag-list" *ngIf="!cargandoDiag && diagnosticos.length > 0">
-            <div
-              class="diag-card"
-              *ngFor="let d of diagnosticos; let i = index"
-              [class.abierta]="expandidoIdx === i">
-
-              <!-- Cabecera colapsable -->
-              <div class="diag-card-header" (click)="toggleDiag(i)">
-                <div class="diag-card-titulo">
-                  <ion-icon name="medkit-outline" class="diag-card-icon"></ion-icon>
-                  <div>
-                    <span class="diag-card-fecha">{{ formatearFechaHora(d.fechaDiagnostico) }}</span>
-                    <span class="diag-card-preview" *ngIf="expandidoIdx !== i && d.diagnostico">
-                      {{ d.diagnostico | slice:0:40 }}{{ d.diagnostico.length > 40 ? '…' : '' }}
-                    </span>
-                  </div>
-                </div>
-                <ion-icon
-                  [name]="expandidoIdx === i ? 'chevron-up-outline' : 'chevron-down-outline'"
-                  class="diag-card-chevron">
-                </ion-icon>
-              </div>
-
-              <!-- Campos expandidos -->
-              <div class="diag-card-body" *ngIf="expandidoIdx === i">
-                <div class="diag-campo" *ngIf="d.sintomas">
-                  <span class="dc-label">Síntomas</span>
-                  <span class="dc-val">{{ d.sintomas }}</span>
-                </div>
-                <div class="diag-campo dc-highlight" *ngIf="d.diagnostico">
-                  <span class="dc-label">Diagnóstico</span>
-                  <span class="dc-val">{{ d.diagnostico }}</span>
-                </div>
-                <div class="diag-campo" *ngIf="d.tratamiento">
-                  <span class="dc-label">Tratamiento</span>
-                  <span class="dc-val">{{ d.tratamiento }}</span>
-                </div>
-                <div class="diag-campo" *ngIf="d.medicamentos">
-                  <span class="dc-label">Medicamentos</span>
-                  <span class="dc-val">{{ d.medicamentos }}</span>
-                </div>
-                <div class="diag-campo" *ngIf="d.observaciones">
-                  <span class="dc-label">Observaciones</span>
-                  <span class="dc-val">{{ d.observaciones }}</span>
-                </div>
-                <div class="diag-meta">
-                  <ion-icon name="person-outline"></ion-icon>
-                  {{ d.nombreVeterinario }}
-                </div>
-              </div>
-
-            </div>
-          </div>
+          <div class="diag-box" *ngIf="c.notas; else sinDiag">{{ c.notas }}</div>
+          <ng-template #sinDiag>
+            <div class="diag-box sin-diag">Sin diagnóstico registrado</div>
+          </ng-template>
         </ng-container>
 
         <!-- Estados sin detalle -->
@@ -178,13 +119,13 @@
           <ion-icon name="time-outline"></ion-icon>
           <span>La cita aún no se ha realizado.<br>El diagnóstico estará disponible<br>una vez finalice.</span>
         </div>
-        <div class="no-det" *ngIf="c.estado === 'en_proceso'">
-          <ion-icon name="reload-outline"></ion-icon>
-          <span>La cita está en proceso.<br>El diagnóstico estará disponible<br>al finalizarla.</span>
+        <div class="no-det" *ngIf="c.estado === 'confirmada'">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <span>Cita confirmada y próxima.<br>El diagnóstico estará disponible<br>después de la consulta.</span>
         </div>
         <div class="no-det" *ngIf="c.estado === 'cancelada'">
           <ion-icon name="close-circle-outline"></ion-icon>
-          <span>Esta cita fue cancelada.<br>No hay diagnóstico disponible.</span>
+          <span>Esta cita fue cancelada.<br>No hay detalles disponibles.</span>
         </div>
         <div class="no-det" *ngIf="c.estado === 'no_asistio'">
           <ion-icon name="person-remove-outline"></ion-icon>

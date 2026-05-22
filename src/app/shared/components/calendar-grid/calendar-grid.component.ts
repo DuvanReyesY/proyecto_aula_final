@@ -2,6 +2,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { Cita } from 'src/app/core/services/cita.service';
 
+
 export interface DiaCalendario {
   dateStr: string;
   dow:     string;
@@ -30,14 +31,22 @@ const VET_COLORS = ['#185FA5','#3B6D11','#A32D2D','#854F0B','#534AB7','#0C6B6B',
 })
 export class CalendarGridComponent implements OnInit, OnChanges {
 
+  @Input() filtroVeterinarioForzado: string = '';
+  @Input() modoVeterinario: boolean = false;
+
   @Input() citas:        Cita[] = [];
   @Input() veterinarios: any[]  = [];
+
+  @Input() vetUid = '';
+
+  get esVeterinario(): boolean { return !!this.vetUid; }
 
   @Output() citaClick = new EventEmitter<Cita>();
   @Output() slotClick = new EventEmitter<{ dateStr: string; hora: string }>();
 
   filtroVeterinario = '';
   filtroTipo        = '';
+  filtroMascota     = '';
 
   weekStart!:       Date;
   today:            Date = new Date();
@@ -65,10 +74,6 @@ export class CalendarGridComponent implements OnInit, OnChanges {
     this.weekStart = this.getWeekStart(this.today);
     this.miniBase  = new Date(this.today.getFullYear(), this.today.getMonth(), 1);
 
-    // ✅ CRÍTICO: 21 slots de 30min para cubrir 08:00–18:00
-    // calcTop/calcHeight usan 48px por cada slot de 30min
-    // El total de altura del grid = 21 × 48px = 1008px
-    // Una cita a las 16:00 → top = (16-8)*60/30*48 = 768px ✅ dentro del grid
     this.horasGrid = [
       '08:00','08:30',
       '09:00','09:30',
@@ -86,10 +91,18 @@ export class CalendarGridComponent implements OnInit, OnChanges {
     this.renderWeekDays();
     this.renderMini();
     this.diaSeleccionado = this.weekDays.find(d => d.isToday) ?? this.weekDays[0];
+
+    if (this.esVeterinario) {
+      this.filtroVeterinario = this.vetUid;
+    }
   }
 
   ngOnChanges() {
     if (this.weekDays.length) this.renderMini();
+
+    if (this.esVeterinario && this.filtroVeterinario !== this.vetUid) {
+      this.filtroVeterinario = this.vetUid;
+    }
   }
 
   get todayStr(): string {
@@ -102,29 +115,80 @@ export class CalendarGridComponent implements OnInit, OnChanges {
 
   get citasFiltradas(): Cita[] {
     return this.citas.filter(c => {
-      const okVet  = !this.filtroVeterinario || c.idVeterinario === this.filtroVeterinario;
-      const okTipo = !this.filtroTipo        || c.tipo === this.filtroTipo;
-      return okVet && okTipo;
+      const okVet     = !this.filtroVeterinario || c.idVeterinario === this.filtroVeterinario;
+      const okTipo    = !this.filtroTipo        || c.tipo === this.filtroTipo;
+      const okMascota = !this.filtroMascota     || c.idMascota === this.filtroMascota;
+      return okVet && okTipo && okMascota;
     });
   }
 
-  setFiltroVeterinario(id: string) { this.filtroVeterinario = id; }
-  setFiltroTipo(tipo: string)      { this.filtroTipo = tipo; }
+  // Mascotas únicas con conteo de citas
+  get mascotasUnicas(): { id: string; nombre: string; count: number }[] {
+    const map = new Map<string, { nombre: string; count: number }>();
+    this.citas.forEach(c => {
+      if (!map.has(c.idMascota)) {
+        map.set(c.idMascota, { nombre: c.nombreMascota, count: 0 });
+      }
+      map.get(c.idMascota)!.count++;
+    });
+    return Array.from(map.entries())
+      .map(([id, v]) => ({ id, nombre: v.nombre, count: v.count }))
+      .sort((a, b) => a.nombre.localeCompare(b.nombre));
+  }
+
+  // ── Setters de filtro ─────────────────────────────────────────
+
+  setFiltroVeterinario(id: string) {
+    if (this.esVeterinario) return;
+    this.filtroVeterinario = id;
+  }
+
+  setFiltroTipo(tipo: string) {
+    this.filtroTipo = tipo;
+  }
+
+  setFiltroMascota(id: string) {
+    this.filtroMascota = id;
+  }
 
   limpiarFiltros() {
+    if (this.esVeterinario) {
+      this.filtroTipo    = '';
+      this.filtroMascota = '';
+      return;
+    }
     this.filtroVeterinario = '';
     this.filtroTipo        = '';
+    this.filtroMascota     = '';
   }
+
+  // ── Dimmed e interactuable ────────────────────────────────────
 
   isCitaDimmed(cita: Cita): boolean {
-    if (!this.filtroVeterinario && !this.filtroTipo) return false;
-    const okVet  = !this.filtroVeterinario || cita.idVeterinario === this.filtroVeterinario;
-    const okTipo = !this.filtroTipo        || cita.tipo === this.filtroTipo;
-    return !(okVet && okTipo);
+    if (this.esVeterinario) {
+      return cita.idVeterinario !== this.vetUid;
+    }
+    if (!this.filtroVeterinario && !this.filtroTipo && !this.filtroMascota) return false;
+    const okVet     = !this.filtroVeterinario || cita.idVeterinario === this.filtroVeterinario;
+    const okTipo    = !this.filtroTipo        || cita.tipo === this.filtroTipo;
+    const okMascota = !this.filtroMascota     || cita.idMascota === this.filtroMascota;
+    return !(okVet && okTipo && okMascota);
   }
 
-  getCitasPorVet(idVet: string): Cita[]  { return this.citas.filter(c => c.idVeterinario === idVet); }
-  getCitasPorTipo(tipo: string): Cita[]  { return this.citas.filter(c => c.tipo === tipo); }
+  esCitaInteractuable(cita: Cita): boolean {
+    if (!this.esVeterinario) return true;
+    return cita.idVeterinario === this.vetUid;
+  }
+
+  // ── Conteos para filtros ──────────────────────────────────────
+
+  getCitasPorVet(idVet: string): Cita[] {
+    return this.citas.filter(c => c.idVeterinario === idVet);
+  }
+
+  getCitasPorTipo(tipo: string): Cita[] {
+    return this.citas.filter(c => c.tipo === tipo);
+  }
 
   getCbSize(horaInicio: string, horaFin: string): string {
     const h = this.calcHeight(horaInicio, horaFin);
@@ -134,7 +198,7 @@ export class CalendarGridComponent implements OnInit, OnChanges {
     return '';
   }
 
-  // ── Navegación ─────────────────────────────────────────────────
+  // ── Navegación ────────────────────────────────────────────────
 
   shiftWeek(n: number) {
     this.weekStart.setDate(this.weekStart.getDate() + n * 7);
@@ -162,7 +226,7 @@ export class CalendarGridComponent implements OnInit, OnChanges {
     this.renderMini();
   }
 
-  // ── Render ─────────────────────────────────────────────────────
+  // ── Render ────────────────────────────────────────────────────
 
   renderWeekDays() {
     const todayStr = this.fmtDate(this.today);
@@ -206,11 +270,15 @@ export class CalendarGridComponent implements OnInit, OnChanges {
     });
   }
 
-  // ── Citas ──────────────────────────────────────────────────────
+  // ── Citas ─────────────────────────────────────────────────────
 
   getCitasDelDia(dateStr: string): Cita[] {
     return this.citas
-      .filter(c => c.fecha === dateStr)
+      .filter(c => {
+        const okFecha   = c.fecha === dateStr;
+        const okMascota = !this.filtroMascota || c.idMascota === this.filtroMascota;
+        return okFecha && okMascota;
+      })
       .sort((a, b) => a.horaInicio.localeCompare(b.horaInicio));
   }
 
@@ -230,10 +298,7 @@ export class CalendarGridComponent implements OnInit, OnChanges {
     return !!proxima && proxima.idCita === cita.idCita;
   }
 
-  // ── Posicionamiento ────────────────────────────────────────────
-  // Cada slot de 30min = 48px
-  // top    = (minutos desde 08:00) / 30 * 48
-  // height = (duración en minutos) / 30 * 48
+  // ── Posicionamiento ───────────────────────────────────────────
 
   calcTop(horaInicio: string): number {
     const [h, m] = horaInicio.split(':').map(Number);
@@ -280,38 +345,31 @@ export class CalendarGridComponent implements OnInit, OnChanges {
   }
 
   openNew(dateStr: string, hora: string) {
+    if (this.esVeterinario) return;
     this.slotClick.emit({ dateStr, hora });
   }
 
   showDetail(cita: Cita) {
+    if (!this.esCitaInteractuable(cita)) return;
     this.citaClick.emit(cita);
   }
 
-  // ── Formato AM/PM ──────────────────────────────────────────────
+  // ── Formato hora ──────────────────────────────────────────────
 
-  /**
-   * Para labels del eje de horas:
-   * "08:00" → "8am" | "12:00" → "12pm" | "08:30" → "" (oculta medias horas)
-   */
   formatHoraLabel(hora: string): string {
     const [h, m] = hora.split(':').map(Number);
-    if (m !== 0) return ''; // no mostrar label en :30
+    if (m !== 0) return '';
     const ampm = h >= 12 ? 'pm' : 'am';
     const h12  = h % 12 === 0 ? 12 : h % 12;
     return `${h12}${ampm}`;
   }
 
-  /**
-   * Para dentro de bloques de cita:
-   * "16:00" → "4" | "16:30" → "4:30"
-   */
   formatHora12Short(hora: string): string {
     const [h, m] = hora.split(':').map(Number);
     const h12 = h % 12 === 0 ? 12 : h % 12;
     return m === 0 ? `${h12}` : `${h12}:${String(m).padStart(2,'0')}`;
   }
 
-  /** "16:00" → "pm" */
   getAmPm(hora: string): string {
     const [h] = hora.split(':').map(Number);
     return h >= 12 ? 'pm' : 'am';
@@ -327,4 +385,8 @@ export class CalendarGridComponent implements OnInit, OnChanges {
   private fmtDate(d: Date): string {
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   }
+
+  getNombreMascota(id: string): string {
+  return this.mascotasUnicas.find(m => m.id === id)?.nombre ?? '';
+}
 }

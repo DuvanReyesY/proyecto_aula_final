@@ -11,9 +11,6 @@ import {
   deleteDoc,
   onSnapshot,
   CollectionReference,
-  query,
-  where,
-  getDocs,
 } from '@angular/fire/firestore';
 import { Observable, take } from 'rxjs';
 
@@ -31,7 +28,7 @@ export interface Cita {
   horaInicio:          string;  // "09:00"
   horaFin:             string;  // "09:30"
   tipo:                string;
-  estado: 'pendiente' | 'en_proceso' | 'finalizada' | 'cancelada' | 'no_asistio';
+  estado: 'pendiente' | 'confirmada' | 'en_proceso' | 'finalizada' | 'cancelada' | 'no_asistio';
   notas:               string;
   fechaRegistro:       string;
 }
@@ -59,39 +56,7 @@ export class CitaService {
           idCita: d.id,
           ...d.data()
         } as Cita));
-        observer.next(citas);
-      });
-      return () => unsub();
-    });
-  }
-
-  // Solo las citas donde idVeterinario coincide — para la vista del veterinario
-  getPorVeterinario(idVeterinario: string): Observable<Cita[]> {
-    return new Observable(observer => {
-      const q = query(
-        collection(this.firestore, this.col),
-        where('idVeterinario', '==', idVeterinario)
-      );
-      const unsub = onSnapshot(q, snapshot => {
-        const citas = snapshot.docs.map(d => ({
-          idCita: d.id,
-          ...d.data()
-        } as Cita));
-        observer.next(citas);
-      });
-      return () => unsub();
-    });
-  }
-
-  getCitasPorMascota(idMascota: string): Observable<Cita[]> {
-    return new Observable(observer => {
-      const q = query(
-        collection(this.firestore, this.col),
-        where('idMascota', '==', idMascota)
-      );
-      const unsub = onSnapshot(q, snapshot => {
-        const citas = snapshot.docs.map(d => ({ idCita: d.id, ...d.data() } as Cita));
-        observer.next(citas);
+        observer.next(citas); // ← solo emite, NO llama actualizarEstados
       });
       return () => unsub();
     });
@@ -133,7 +98,7 @@ export class CitaService {
 
       this.getTodas().pipe(take(1)).subscribe(async citas => {
         const vencidas = citas.filter(c =>
-          (c.estado === 'pendiente' || c.estado === 'en_proceso') &&
+          (c.estado === 'pendiente' || c.estado === 'confirmada') &&
           (c.fecha < fechaHoy || (c.fecha === fechaHoy && c.horaFin <= horaAhora))
         );
 

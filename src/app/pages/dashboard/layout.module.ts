@@ -20,6 +20,10 @@ const routes: Routes = [
         loadChildren: () => import('./tabs/cliente-home/cliente-home.module').then(m => m.ClienteHomePageModule)
       },
       {
+        path: 'veterinario-home',
+        loadChildren: () => import('./tabs/home-veterinario/home-veterinario.module').then(m => m.HomeVeterinarioPageModule)
+      },
+      {
         path: 'usuarios',
         loadChildren: () => import('./tabs/usuarios/usuarios.module').then(m => m.UsuariosPageModule)
       },

@@ -882,7 +882,7 @@ $sidebar-w:   220px;
 
   // Estados visuales
   &.estado-pendiente  { &::before { background: $orange; } }
-  &.estado-en_proceso { &::before { background: $blue; } }
+  &.estado-confirmada { &::before { background: $green; } }
   &.estado-en_proceso { &::before { background: $blue; } }
   &.estado-finalizada { &::before { background: $border-dark; } opacity: 0.6; }
   &.estado-cancelada  { &::before { background: $red; } opacity: 0.55; }
@@ -1068,4 +1068,14 @@ $sidebar-w:   220px;
 .time-cell.half-hour {
   border-bottom: 1px dashed rgba(0,0,0,0.06);
 }
+.sidebar--vet {
+  width: 180px;
+  min-width: 180px;
+}
  
+// Chip fijo del vet en el header (sin botón de cerrar)
+.vet-chip {
+  cursor: default;
+  
+  button { display: none; }
+}

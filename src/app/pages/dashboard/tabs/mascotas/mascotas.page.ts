@@ -69,37 +69,26 @@ export class MascotasPage implements OnInit, OnDestroy {
 
   // ── Sesión / permisos ────────────────────────────────────────────
 
-  private async inicializarSesion() {
-    const user = this.auth.currentUser;
-    if (!user) return;
+private async inicializarSesion() {
+  // ✅ Leer desde localStorage (ya lo guardó AuthService en el login)
+  const uid = localStorage.getItem('uid');
+  const rol = localStorage.getItem('rol');
 
-    this.uidActual = user.uid;
+  if (!uid || !rol) return;
 
-    const roles = ['administradores', 'recepcionistas', 'veterinarios', 'clientes'];
-    const rolMap: Record<string, string> = {
-      administradores: 'administrador',
-      recepcionistas:  'recepcionista',
-      veterinarios:    'veterinario',
-      clientes:        'cliente',
-    };
+  this.uidActual = uid;
+  this.rolActual = rol;
 
-    for (const coleccion of roles) {
-      const data = await this.userSvc.getDocumentOnce(coleccion, user.uid);
-      if (data) {
-        this.rolActual = rolMap[coleccion];
-        break;
-      }
-    }
+  // ✅ Solo buscar privilegios, el rol ya lo tienes
+  const privDoc = await this.userSvc.getDocumentOnce('privilegios', uid);
+  this.privilegios = privDoc ?? {};
 
-    const privDoc = await this.userSvc.getDocumentOnce('privilegios', user.uid);
-    this.privilegios = privDoc ?? {};
+  this.puedeCrear = this.rolActual === 'administrador'
+    || (this.rolActual === 'recepcionista' && this.privilegios['crearMascotas'] === true);
 
-    this.puedeCrear = this.rolActual === 'administrador'
-      || (this.rolActual === 'recepcionista' && this.privilegios['crearMascotas'] === true);
-
-    this.puedeEditar = this.rolActual === 'administrador'
-      || (this.rolActual === 'recepcionista' && this.privilegios['editarMascotas'] === true);
-  }
+  this.puedeEditar = this.rolActual === 'administrador'
+    || (this.rolActual === 'recepcionista' && this.privilegios['editarMascotas'] === true);
+}
 
   // ── Carga de datos ───────────────────────────────────────────────
 
@@ -200,6 +189,7 @@ getNombreCliente(idCliente: string): string {
 
   // En lugar de abrir un modal, navegar como usuarios:
 async nuevaMascota() {
+  console.log( 'Rol:', this.rolActual);
   const modal = await this.modalCtrl.create({
     component: RegisterMascotaPage,
     componentProps: { modo: 'crear' },

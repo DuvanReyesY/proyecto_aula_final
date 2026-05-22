@@ -13,11 +13,10 @@ import { ReasignarVeterinarioComponent } from './components/reasignar-veterinari
 import { CalendarGridComponent } from './components/calendar-grid/calendar-grid.component';
 import { MascotaDetalleComponent } from './components/mascota-detalle/mascota-detalle.component';
 import { HistorialCitasComponent } from './components/historial-citas/historial-citas.component';
-import { DiagnosticoModalComponent } from './components/diagnostico-modal/diagnostico-modal.component';
 
 @NgModule({
-  declarations: [TabBarComponent, SideMenuComponent, DashboardHeaderComponent, PrivilegiosModalComponent, ClienteSelectorComponent, MigrarMascotaComponent, ReasignarVeterinarioComponent, CalendarGridComponent, MascotaDetalleComponent, HistorialCitasComponent, DiagnosticoModalComponent],
+  declarations: [TabBarComponent, SideMenuComponent, DashboardHeaderComponent, PrivilegiosModalComponent, ClienteSelectorComponent, MigrarMascotaComponent, ReasignarVeterinarioComponent, CalendarGridComponent, MascotaDetalleComponent, HistorialCitasComponent],
   imports: [CommonModule, IonicModule, RouterModule, FormsModule, ReactiveFormsModule], 
-  exports: [TabBarComponent, SideMenuComponent, DashboardHeaderComponent, PrivilegiosModalComponent, ClienteSelectorComponent, ReactiveFormsModule, FormsModule, MigrarMascotaComponent, ReasignarVeterinarioComponent, CalendarGridComponent, MascotaDetalleComponent, HistorialCitasComponent, DiagnosticoModalComponent] 
+  exports: [TabBarComponent, SideMenuComponent, DashboardHeaderComponent, PrivilegiosModalComponent, ClienteSelectorComponent, ReactiveFormsModule, FormsModule, MigrarMascotaComponent, ReasignarVeterinarioComponent, CalendarGridComponent, MascotaDetalleComponent, HistorialCitasComponent] 
 })
 export class SharedModule {}

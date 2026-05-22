@@ -158,7 +158,7 @@
   </ion-grid>
 
   <ion-fab
-    *ngIf="rolActual === 'administrador' || puedeCrear"
+    *ngIf="puedeCrear"
     vertical="bottom"
     horizontal="end"
     slot="fixed"
@@ -168,9 +168,6 @@
     </ion-fab-button>
   </ion-fab>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 60px;">
-      <ion-fab-button color="primary" (click)="nuevaMascota()">
-        <ion-icon name="paw"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+
+
 </ion-content>

@@ -108,6 +108,12 @@ export class LayoutPage implements OnInit {
         ruta: '/layout/configuracion',
         visible: esAdmin   
       },    
+      {
+        label: 'Diagnosticar Citas',   // ✅ Menú oculto para acceder a la home del veterinario
+        icon: 'home-outline',
+        ruta: '/layout/veterinario-home',
+        visible: esVeterinario // ✅ Siempre visible, pero no es un menú real
+      }
 
     ];
 
@@ -125,6 +131,13 @@ export class LayoutPage implements OnInit {
         icon: 'home-outline',
         label: 'Inicio',
         visible: esCliente      // ✅ Solo clientes
+      },
+      {
+        tab: 'veterinario-home', // ✅ Corregido: tab y href faltaban
+        href: '/layout/veterinario-home',
+        icon: 'home-outline',
+        label: 'Inicio',
+        visible: esVeterinario  // ✅ Solo veterinarios
       },
       {
         tab: 'usuarios',

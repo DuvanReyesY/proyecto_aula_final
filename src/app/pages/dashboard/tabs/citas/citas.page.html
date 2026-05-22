@@ -192,6 +192,7 @@
           <div class="custom-select-wrap estado-select-wrap">
             <select [(ngModel)]="estado" class="custom-select">
               <option value="pendiente">Pendiente</option>
+              <option value="confirmada">Confirmada</option>
               <option value="en_proceso">En proceso</option>
               <option value="finalizada">Finalizada</option>
               <option value="cancelada">Cancelada</option>
@@ -306,37 +307,6 @@
           </div>
 
         </div>
-      </div>
-
-
-      <!-- Sección Diagnóstico -->
-      <div class="diagnostico-section" *ngIf="citaDetalle">
-
-        <!-- Veterinario asignado: botón activo solo en estado pendiente -->
-        <ng-container *ngIf="esVeterinarioAsignado()">
-          <button
-            class="btn-save-custom"
-            [disabled]="citaDetalle.estado == 'cancelada'"
-            (click)="abrirDiagnosticoModal(false)">
-            <ion-icon name="medkit-outline"></ion-icon>
-            {{ existeDiagnostico ? 'Editar diagnóstico' : 'Agregar diagnóstico' }}
-          </button>
-          <p class="diag-hint" *ngIf="citaDetalle.estado === 'cancelada'">Esta cita fue cancelada.</p>
-          <p class="diag-hint" *ngIf="citaDetalle.estado === 'finalizada'">Esta cita ya tiene diagnóstico finalizado.</p>
-          <p class="diag-hint" *ngIf="citaDetalle.estado === 'en_proceso'">Esta cita está en proceso.</p>
-        </ng-container>
-
-        <!-- Recepcionista / Admin: solo ver si hay diagnóstico y está finalizada -->
-        <ng-container *ngIf="!esVeterinarioAsignado() && citaDetalle.estado === 'finalizada'">
-          <button
-            class="btn-save-custom btn-outline"
-            [disabled]="!existeDiagnostico"
-            (click)="abrirDiagnosticoModal(true)">
-            <ion-icon name="eye-outline"></ion-icon>
-            {{ existeDiagnostico ? 'Ver diagnóstico' : 'Sin diagnóstico registrado' }}
-          </button>
-        </ng-container>
-
       </div>
 
     </ion-content>
