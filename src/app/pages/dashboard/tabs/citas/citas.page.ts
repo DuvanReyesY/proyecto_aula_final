@@ -18,8 +18,10 @@ import { HorarioService, DOW_MAP } from 'src/app/core/services/horario.service';
 
 @Component({
   selector: 'app-cita',
+  selector: 'app-cita',
   templateUrl: './citas.page.html',
   styleUrls: ['./citas.page.scss'],
+  standalone: false,
   standalone: false,
 })
 export class CitaPage implements OnInit, OnDestroy {

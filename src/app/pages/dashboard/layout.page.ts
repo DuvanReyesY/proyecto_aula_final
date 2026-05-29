@@ -59,6 +59,7 @@ export class LayoutPage implements OnInit {
     const esVeterinario   = this.rol === 'veterinario';
     const esCliente       = this.rol === 'cliente';
     const esStaff         = esAdmin || esRecepcionista || esVeterinario; // ✅ Agrupador útil
+    const esStaff         = esAdmin || esRecepcionista || esVeterinario; // ✅ Agrupador útil
 
     const p = this.privilegios;
 
@@ -77,6 +78,13 @@ export class LayoutPage implements OnInit {
         label: 'Inicio',
         icon: 'home-outline',
         ruta: '/layout/dashboard',
+        visible: esStaff        // ✅ Solo staff ve este inicio
+      },
+      {
+        label: 'Inicio',        // ✅ Mismo label, ruta distinta para el cliente
+        icon: 'home-outline',
+        ruta: '/layout/cliente-home',
+        visible: esCliente      // ✅ Solo clientes ven este inicio
         visible: esStaff        // ✅ Solo staff ve este inicio
       },
       {
@@ -121,6 +129,7 @@ export class LayoutPage implements OnInit {
         ruta: '/layout/veterinario-home',
         visible: esVeterinario
       }
+
 
     ];
 

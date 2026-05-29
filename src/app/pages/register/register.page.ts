@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';  // ← agrega Input
+import { Component, Input, OnInit } from '@angular/core';  // ← agrega Input
 import { Router, ActivatedRoute } from '@angular/router';
+import { ModalController, ToastController } from '@ionic/angular';  // ← agrega ModalController
 import { ModalController, ToastController } from '@ionic/angular';  // ← agrega ModalController
 import { UserService } from 'src/app/core/services/user.service';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -11,6 +13,12 @@ import { AuthService } from 'src/app/core/services/auth.service';
   standalone: false
 })
 export class RegisterPage implements OnInit {
+
+  // ── Inputs desde el modal ──────────────────
+  @Input() modoEdicionInput: boolean = false;
+  @Input() uidEditarInput: string = '';
+  @Input() rolInput: string = '';
+
 
   // ── Inputs desde el modal ──────────────────
   @Input() modoEdicionInput: boolean = false;
@@ -40,12 +48,30 @@ export class RegisterPage implements OnInit {
     private route: ActivatedRoute,
     private toastCtrl: ToastController,
     private modalCtrl: ModalController,  // ← agrega esto
+    private toastCtrl: ToastController,
+    private modalCtrl: ModalController,  // ← agrega esto
   ) {}
 
   async ngOnInit() {
     this.rolActual = this.authService.getRolActual() ?? '';
     this.user.idAdministrador = this.authService.getUidActual() ?? '';
 
+    // ── Si viene como modal ──────────────────
+    if (this.modoEdicionInput && this.uidEditarInput) {
+      this.modoEdicion = true;
+      this.uidEditar   = this.uidEditarInput;
+      this.role        = this.rolInput;
+      this.cargando    = true;
+
+      const coleccion = this.userService.getColeccionPorRol(this.role);
+      const datos     = await this.userService.getDocumentOnce(coleccion, this.uidEditar);
+      if (datos) this.user = { ...this.user, ...datos };
+
+      this.cargando = false;
+      return;
+    }
+
+    // ── Fallback: si se abre por ruta ────────
     // ── Si viene como modal ──────────────────
     if (this.modoEdicionInput && this.uidEditarInput) {
       this.modoEdicion = true;
@@ -79,6 +105,10 @@ export class RegisterPage implements OnInit {
     } else {
       if (this.rolActual === 'recepcionista') this.role = 'cliente';
     }
+  }
+
+  cerrarModal(guardado = false) {
+    this.modalCtrl.dismiss({ guardado });
   }
 
   cerrarModal(guardado = false) {
@@ -281,6 +311,7 @@ async guardarEdicion() {
       duration: 2500,
       color,
       position: 'bottom',
+      icon: color === 'success' ? 'checkmark-circle-outline' :
       icon: color === 'success' ? 'checkmark-circle-outline' :
             color === 'warning' ? 'alert-outline' : 'close-circle-outline'
     });

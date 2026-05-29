@@ -10,6 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Auth } from '@angular/fire/auth';
 import { inject } from '@angular/core';
 import { ModalController } from '@ionic/angular'; 
+import { ModalController } from '@ionic/angular'; 
 import { MascotaService, Mascota } from 'src/app/core/services/mascota.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { RegisterMascotaPage } from 'src/app/pages/register-mascota/register-mascota.page';
@@ -46,6 +47,7 @@ export class MascotasPage implements OnInit, OnDestroy {
   private auth     = inject(Auth);
   private destroy$ = new Subject<void>();
   
+  
 
   constructor(
     private mascotaSvc:  MascotaService,
@@ -74,40 +76,47 @@ export class MascotasPage implements OnInit, OnDestroy {
 
   // ── Sesión / permisos ────────────────────────────────────────────
 
-  private async inicializarSesion() {
-    const user = this.auth.currentUser;
-    if (!user) return;
+private async inicializarSesion() {
+  // ✅ Leer desde localStorage (ya lo guardó AuthService en el login)
+  const uid = localStorage.getItem('uid');
+  const rol = localStorage.getItem('rol');
 
-    this.uidActual = user.uid;
+  if (!uid || !rol) return;
 
-    const roles = ['administradores', 'recepcionistas', 'veterinarios', 'clientes'];
-    const rolMap: Record<string, string> = {
-      administradores: 'administrador',
-      recepcionistas:  'recepcionista',
-      veterinarios:    'veterinario',
-      clientes:        'cliente',
-    };
+  this.uidActual = uid;
+  this.rolActual = rol;
 
-    for (const coleccion of roles) {
-      const data = await this.userSvc.getDocumentOnce(coleccion, user.uid);
-      if (data) {
-        this.rolActual = rolMap[coleccion];
-        break;
-      }
-    }
+  // ✅ Solo buscar privilegios, el rol ya lo tienes
+  const privDoc = await this.userSvc.getDocumentOnce('privilegios', uid);
+  this.privilegios = privDoc ?? {};
 
-    const privDoc = await this.userSvc.getDocumentOnce('privilegios', user.uid);
-    this.privilegios = privDoc ?? {};
+  this.puedeCrear = this.rolActual === 'administrador'
+    || (this.rolActual === 'recepcionista' && this.privilegios['crearMascotas'] === true);
 
-    this.puedeCrear = this.rolActual === 'administrador'
-      || (this.rolActual === 'recepcionista' && this.privilegios['crearMascotas'] === true);
-
-    this.puedeEditar = this.rolActual === 'administrador'
-      || (this.rolActual === 'recepcionista' && this.privilegios['editarMascotas'] === true);
-  }
+  this.puedeEditar = this.rolActual === 'administrador'
+    || (this.rolActual === 'recepcionista' && this.privilegios['editarMascotas'] === true);
+}
 
   // ── Carga de datos ───────────────────────────────────────────────
 
+private cargarClientes() {
+  this.userSvc.getTodosLosUsuarios()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(users => {
+      // Sin filtrar por rol para no perder datos
+      this.clientes = users;
+    });
+}
+
+getNombreCliente(idCliente: string): string {
+  const c = this.clientes.find(x => x.idCliente === idCliente);
+  if (!c) return '—';
+
+  // ✅ Firestore guarda Nombre/Apellido en mayúscula
+  const nombre   = c.Nombre   ?? c.nombre   ?? '';
+  const apellido = c.Apellido ?? c.apellido ?? '';
+  return `${nombre} ${apellido}`.trim() || '—';
+}
 private cargarClientes() {
   this.userSvc.getTodosLosUsuarios()
     .pipe(takeUntil(this.destroy$))
@@ -183,6 +192,7 @@ getNombreCliente(idCliente: string): string {
   }
 
   // ── Helpers template ─────────────────────────────────────────────
+
 
 
 
@@ -379,6 +389,20 @@ async abrirMigracionDirecta(mascota: Mascota) {
   return edad;
 }
 
+async verDetalleMascota(mascota: Mascota) {
+  const modal = await this.modalCtrl.create({
+    component: MascotaDetalleComponent,
+    componentProps: { mascota },
+    breakpoints: [0, 0.92, 1],
+    initialBreakpoint: 0.92,
+  });
+  await modal.present();
+
+  const { data } = await modal.onWillDismiss();
+  if (data?.editar) {
+    this.editarMascota(data.editar);
+  }
+}
 async verDetalleMascota(mascota: Mascota) {
   const modal = await this.modalCtrl.create({
     component: MascotaDetalleComponent,

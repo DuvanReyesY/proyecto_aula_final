@@ -55,11 +55,13 @@
 <ion-content class="mascotas-content">
 
   <!-- Estado: cargando -->
+  <!-- Estado: cargando -->
   <div *ngIf="cargando" class="estado-vacio">
     <ion-spinner name="crescent" color="primary"></ion-spinner>
     <p>Cargando mascotas...</p>
   </div>
 
+  <!-- Estado: sin resultados -->
   <!-- Estado: sin resultados -->
   <div *ngIf="!cargando && mascotasFiltradas.length === 0" class="estado-vacio">
     <ion-icon name="paw-outline" color="medium"></ion-icon>
@@ -69,6 +71,11 @@
     </ion-button>
   </div>
 
+  <!-- Lista de mascotas -->
+  <ion-grid
+    *ngIf="!cargando && mascotasFiltradas.length > 0"
+    class="mascotas-grid"
+    style="padding-bottom: 80px;">
   <!-- Lista de mascotas -->
   <ion-grid
     *ngIf="!cargando && mascotasFiltradas.length > 0"
@@ -86,6 +93,8 @@
           class="mascota-card"
           [class.mascota-inactiva]="mascota.estado === 'inactivo'"
           button
+          (click)="verDetalleMascota(mascota)"
+          [attr.aria-label]="'Ver detalles de ' + mascota.nombre">
           (click)="verDetalleMascota(mascota)"
           [attr.aria-label]="'Ver detalles de ' + mascota.nombre">
 
@@ -128,6 +137,7 @@
             </div>
           </ion-card-content>
 
+          <!-- Botones de acción -->
           <!-- Botones de acción -->
           <div class="mascota-acciones" (click)="$event.stopPropagation()">
             <ion-button   *ngIf="authService.tienePrivilegio('editarMascotas') || rolActual === 'administrador'" fill="clear" size="small" color="primary"

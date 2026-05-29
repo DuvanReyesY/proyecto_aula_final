@@ -193,6 +193,37 @@ async editarUsuario(usuario: any) {
     this.mostrarToast('Usuario actualizado correctamente', 'success');
   }
 }
+async nuevoUsuario() {
+  const modal = await this.modalCtrl.create({
+    component: RegisterPage,
+    componentProps: { modoEdicionInput: false },
+    breakpoints: [0, 1],
+    initialBreakpoint: 1,
+  });
+  await modal.present();
+  const { data } = await modal.onWillDismiss();
+  if (data?.guardado) {
+    this.mostrarToast('Usuario registrado exitosamente', 'success');
+  }
+}
+
+async editarUsuario(usuario: any) {
+  const modal = await this.modalCtrl.create({
+    component: RegisterPage,
+    componentProps: {
+      modoEdicionInput: true,
+      uidEditarInput:   usuario.uid,
+      rolInput:         usuario.rol,
+    },
+    breakpoints: [0, 1],
+    initialBreakpoint: 1,
+  });
+  await modal.present();
+  const { data } = await modal.onWillDismiss();
+  if (data?.guardado) {
+    this.mostrarToast('Usuario actualizado correctamente', 'success');
+  }
+}
 
   getBadgeColor(rol: string): string {
     const map: any = {

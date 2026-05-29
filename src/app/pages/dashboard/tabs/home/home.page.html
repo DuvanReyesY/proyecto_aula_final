@@ -1,6 +1,16 @@
 <ion-header>
   <ion-toolbar class="main-toolbar">
+  <ion-toolbar class="main-toolbar">
     <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+      <ion-button fill="clear" class="notif-btn">
+        <ion-badge color="success" class="nav-badge">2</ion-badge>
+        <ion-icon name="notifications-outline" color="light"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" class="notif-btn">
+        <ion-badge color="warning" class="nav-badge">4</ion-badge>
+        <ion-icon name="mail-outline" color="light"></ion-icon>
+      </ion-button>
       <ion-menu-button color="light"></ion-menu-button>
       <ion-button fill="clear" class="notif-btn">
         <ion-badge color="success" class="nav-badge">2</ion-badge>
@@ -35,11 +45,56 @@
       <div class="user-chip">
         <img [src]="fotoUrl || 'assets/icon/default-avatar.png'" class="user-avatar" />
         <span class="user-name">{{ nombreUsuario }}</span>
+
+    <ion-buttons slot="end">
+      <ion-button *ngIf="rol === 'administrador'" class="btn-reportes" id="reportes-trigger">
+        <ion-icon name="bar-chart-outline" slot="start"></ion-icon>
+        Reportes
+        <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+      </ion-button>
+      <ion-popover trigger="reportes-trigger" triggerAction="click">
+        <ng-template>
+          <ion-list lines="none">
+            <ion-list-header>Reportes</ion-list-header>
+            <ion-item button>
+              <ion-icon name="document-outline" slot="start" color="danger"></ion-icon>PDF
+            </ion-item>
+            <ion-item button>
+              <ion-icon name="grid-outline" slot="start" color="success"></ion-icon>Excel
+            </ion-item>
+          </ion-list>
+        </ng-template>
+      </ion-popover>
+
+      <div class="user-chip">
+        <img [src]="fotoUrl || 'assets/icon/default-avatar.png'" class="user-avatar" />
+        <span class="user-name">{{ nombreUsuario }}</span>
       </div>
+    </ion-buttons>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
+<ion-content [fullscreen]="true">
+  <div class="page-body">
+
+    <!-- ── Encabezado de sección ─────────────────────────── -->
+    <div class="bienvenido-row">
+      <div class="section-label">
+        <ion-icon name="stats-chart-outline"></ion-icon>
+        <span>Resumen del sistema</span>
+      </div>
+    </div>
+
+    <!-- ── Fila superior: Eslogan + Congrats ─────────────── -->
+    <div class="top-row">
+
+      <!-- Eslogan -->
+      <div class="eslogan-card">
+        <p class="eslogan-text">
+          "Cada mascota merece la mejor atención.<br>
+          Gracias por hacer posible ese cuidado cada día."
+        </p>
 <ion-content [fullscreen]="true">
   <div class="page-body">
 
@@ -67,7 +122,13 @@
         <img [src]="fotoUrl || 'assets/icon/default-avatar.png'" class="congrats-avatar" alt="avatar" />
         <h2 class="congrats-nombre">{{ nombreUsuario }}</h2>
         <p class="congrats-frase">{{ fraseMotivacional }}</p>
+      <!-- Congrats -->
+      <div class="congrats-card">
+        <img [src]="fotoUrl || 'assets/icon/default-avatar.png'" class="congrats-avatar" alt="avatar" />
+        <h2 class="congrats-nombre">{{ nombreUsuario }}</h2>
+        <p class="congrats-frase">{{ fraseMotivacional }}</p>
       </div>
+
 
     </div>
 
@@ -75,10 +136,26 @@
     <div class="section-label">
       <ion-icon name="pulse-outline"></ion-icon>
       <span>Estadísticas</span>
+    <!-- ── Stat cards ─────────────────────────────────────── -->
+    <div class="section-label">
+      <ion-icon name="pulse-outline"></ion-icon>
+      <span>Estadísticas</span>
     </div>
 
     <div class="stats-scroll-wrap">
+    <div class="stats-scroll-wrap">
 
+      <!-- Clientes -->
+      <div class="stat-card-vib amber-grad"
+           *ngIf="rol === 'administrador' || rol === 'recepcionista'">
+        <div class="stat-vib-top">
+          <div>
+            <p class="stat-vib-label">Clientes</p>
+            <p class="stat-vib-num">{{ totalClientes }}</p>
+          </div>
+          <div class="stat-vib-icon-wrap">
+            <ion-icon name="people-outline"></ion-icon>
+          </div>
       <!-- Clientes -->
       <div class="stat-card-vib amber-grad"
            *ngIf="rol === 'administrador' || rol === 'recepcionista'">
@@ -103,7 +180,21 @@
           <div>
             <p class="stat-vib-label">Mascotas</p>
             <p class="stat-vib-num">{{ totalMascotas }}</p>
+        <svg class="sparkline-vib" viewBox="0 0 100 30" preserveAspectRatio="none">
+          <polyline points="0,26 18,18 36,22 54,8 72,15 90,7 100,12"
+            fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <!-- Mascotas -->
+      <div class="stat-card-vib teal-grad">
+        <div class="stat-vib-top">
+          <div>
+            <p class="stat-vib-label">Mascotas</p>
+            <p class="stat-vib-num">{{ totalMascotas }}</p>
           </div>
+          <div class="stat-vib-icon-wrap">
+            <ion-icon name="paw-outline"></ion-icon>
           <div class="stat-vib-icon-wrap">
             <ion-icon name="paw-outline"></ion-icon>
           </div>
@@ -121,7 +212,23 @@
           <div>
             <p class="stat-vib-label">Citas pendientes</p>
             <p class="stat-vib-num">{{ totalCitasPendientes }}</p>
+        </div>
+        <svg class="sparkline-vib" viewBox="0 0 100 30" preserveAspectRatio="none">
+          <polyline points="0,28 18,16 36,22 54,6 72,14 90,8 100,14"
+            fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <!-- Citas Pendientes -->
+      <div class="stat-card-vib purple-grad"
+           *ngIf="rol === 'administrador' || rol === 'recepcionista'">
+        <div class="stat-vib-top">
+          <div>
+            <p class="stat-vib-label">Citas pendientes</p>
+            <p class="stat-vib-num">{{ totalCitasPendientes }}</p>
           </div>
+          <div class="stat-vib-icon-wrap">
+            <ion-icon name="time-outline"></ion-icon>
           <div class="stat-vib-icon-wrap">
             <ion-icon name="time-outline"></ion-icon>
           </div>
@@ -138,7 +245,21 @@
           <div>
             <p class="stat-vib-label">Veterinarios</p>
             <p class="stat-vib-num">{{ totalVeterinarios }}</p>
+        <svg class="sparkline-vib" viewBox="0 0 100 30" preserveAspectRatio="none">
+          <polyline points="0,24 18,14 36,20 54,4 72,12 90,6 100,10"
+            fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <!-- Veterinarios -->
+      <div class="stat-card-vib teal-grad" *ngIf="rol === 'administrador'">
+        <div class="stat-vib-top">
+          <div>
+            <p class="stat-vib-label">Veterinarios</p>
+            <p class="stat-vib-num">{{ totalVeterinarios }}</p>
           </div>
+          <div class="stat-vib-icon-wrap">
+            <ion-icon name="medical-outline"></ion-icon>
           <div class="stat-vib-icon-wrap">
             <ion-icon name="medical-outline"></ion-icon>
           </div>
@@ -155,7 +276,21 @@
           <div>
             <p class="stat-vib-label">Recepcionistas</p>
             <p class="stat-vib-num">{{ totalRecepcionistas }}</p>
+        <svg class="sparkline-vib" viewBox="0 0 100 30" preserveAspectRatio="none">
+          <polyline points="0,25 18,17 36,21 54,9 72,16 90,10 100,15"
+            fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <!-- Recepcionistas -->
+      <div class="stat-card-vib pink-grad" *ngIf="rol === 'administrador'">
+        <div class="stat-vib-top">
+          <div>
+            <p class="stat-vib-label">Recepcionistas</p>
+            <p class="stat-vib-num">{{ totalRecepcionistas }}</p>
           </div>
+          <div class="stat-vib-icon-wrap">
+            <ion-icon name="headset-outline"></ion-icon>
           <div class="stat-vib-icon-wrap">
             <ion-icon name="headset-outline"></ion-icon>
           </div>
@@ -175,6 +310,8 @@
           </div>
           <div class="stat-vib-icon-wrap">
             <ion-icon name="document-text-outline"></ion-icon>
+          <div class="stat-vib-icon-wrap">
+            <ion-icon name="document-text-outline"></ion-icon>
           </div>
         </div>
         <svg class="sparkline-vib" viewBox="0 0 100 30" preserveAspectRatio="none">
@@ -182,8 +319,122 @@
             fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
         </svg>
       </div>
+        <svg class="sparkline-vib" viewBox="0 0 100 30" preserveAspectRatio="none">
+          <polyline points="0,26 18,16 36,22 54,7 72,15 90,8 100,12"
+            fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+        </svg>
+      </div>
 
     </div>
+
+    <!-- ── Tabla de citas del día ─────────────────────────── -->
+    <div class="section-label">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <span>Citas del día</span>
+    </div>
+
+ <!-- Filtros -->
+<div class="filtros-row">
+  <div class="filtro-group">
+    <label>Veterinario</label>
+    <select class="filtro-select" [(ngModel)]="filtroVet" (change)="aplicarFiltros()">
+      <option value="">Todos</option>
+      <option *ngFor="let v of vetsUnicos" [value]="v">{{ v }}</option>
+    </select>
+  </div>
+  <div class="filtro-group">
+    <label>Estado</label>
+    <select class="filtro-select" [(ngModel)]="filtroEstado" (change)="aplicarFiltros()">
+      <option value="">Todos</option>
+      <option value="pendiente">Pendiente</option>       <!-- ✅ minúscula -->
+      <option value="confirmada">Confirmada</option>
+      <option value="en_proceso">En proceso</option>
+      <option value="finalizada">Finalizada</option>
+      <option value="cancelada">Cancelada</option>
+      <option value="no_asistio">No asistió</option>
+    </select>
+  </div>
+  <button class="btn-filtrar" (click)="aplicarFiltros()">
+    <ion-icon name="search-outline"></ion-icon>
+    Filtrar
+  </button>
+</div>
+
+<!-- Tabla -->
+<div class="citas-section">
+  <div class="table-wrap">
+    <table class="citas-table">
+      <thead>
+        <tr>
+          <th>Acciones</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>Horario</th>
+          <th>Mascota</th>
+          <th>Tipo de Cita</th>
+          <th>Cliente</th>
+          <th>Veterinario</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cita of citasFiltradas">
+
+          <td>
+            <div class="acciones-cell">
+              <button class="accion-btn ver-btn" title="Ver detalle">
+                <ion-icon name="eye-outline"></ion-icon>
+              </button>
+              <button class="accion-btn edit-btn" title="Editar">
+                <ion-icon name="create-outline"></ion-icon>
+              </button>
+            </div>
+          </td>
+
+          <!-- ✅ cita.estado minúscula -->
+          <td>
+            <span class="estado-pill"
+              [class.pendiente]="cita.estado === 'pendiente'"
+              [class.en-proceso]="cita.estado === 'en_proceso'"
+              [class.confirmada]="cita.estado === 'confirmada'"
+              [class.finalizada]="cita.estado === 'finalizada'"
+              [class.cancelada]="cita.estado  === 'cancelada'"
+              [class.no-asistio]="cita.estado === 'no_asistio'">
+              {{ cita.estado | titlecase }}
+            </span>
+          </td>
+
+          <!-- ✅ cita.fecha ya es string "YYYY-MM-DD" -->
+          <td>
+            <span class="fecha-cell">{{ cita.fecha }}</span>
+          </td>
+
+          <!-- ✅ horaInicio + horaFin -->
+          <td>
+            <span class="hora-cell">{{ cita.horaInicio }} – {{ cita.horaFin }}</span>
+          </td>
+
+          <!-- ✅ cita.nombreMascota -->
+          <td class="mascota-cell">{{ cita.nombreMascota }}</td>
+
+          <!-- ✅ cita.tipo -->
+          <td>{{ cita.tipo }}</td>
+
+          <!-- ✅ cita.nombreCliente -->
+          <td>{{ cita.nombreCliente }}</td>
+
+          <!-- ✅ cita.nombreVeterinario -->
+          <td>{{ cita.nombreVeterinario }}</td>
+
+        </tr>
+        <tr *ngIf="citasFiltradas.length === 0">
+          <td colspan="8" class="sin-citas">No hay citas para hoy.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+  </div>
 
     <!-- ── Tabla de citas del día ─────────────────────────── -->
     <div class="section-label">

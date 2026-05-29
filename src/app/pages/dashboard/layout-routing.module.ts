@@ -7,7 +7,8 @@ const routes: Routes = [
   {
     path: '',
     component: LayoutPage
-  },  {
+  },
+  {
     path: 'configuracion',
     loadChildren: () => import('./tabs/configuracion/configuracion.module').then( m => m.ConfiguracionPageModule)
   },

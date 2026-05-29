@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { TabBarComponent } from './tab-bar.component';
+import { CalendarGridComponent } from './calendar-grid.component';
 
-describe('TabBarComponent', () => {
-  let component: TabBarComponent;
-  let fixture: ComponentFixture<TabBarComponent>;
+describe('CalendarGridComponent', () => {
+  let component: CalendarGridComponent;
+  let fixture: ComponentFixture<CalendarGridComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TabBarComponent ],
+      declarations: [ CalendarGridComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TabBarComponent);
+    fixture = TestBed.createComponent(CalendarGridComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
