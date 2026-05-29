@@ -1,0 +1,190 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button *ngIf="idCliente" (click)="cerrarModal()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+      <ion-back-button *ngIf="!idCliente" defaultHref="/layout/historial" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Expediente Médico</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="exp-content">
+  <ng-container *ngIf="mascota">
+
+    <!-- ── Header mascota ── -->
+    <div class="exp-mascota-header">
+      <div class="exp-mascota-left">
+        <div class="exp-avatar">
+          <ion-icon name="paw"></ion-icon>
+        </div>
+        <div>
+          <h2 class="exp-nombre">{{ mascota.nombre }}</h2>
+          <p class="exp-sub">{{ mascota.especie | titlecase }} · {{ mascota.raza }}</p>
+        </div>
+      </div>
+      <div class="exp-mascota-right">
+        <span><strong>Sexo:</strong> {{ mascota.sexo | titlecase }}</span>
+        <span><strong>ID:</strong> {{ idMascota.substring(0, 6) }}</span>
+      </div>
+    </div>
+
+    <!-- ── Perfil + Antecedentes ── -->
+    <div class="exp-top-grid">
+
+      <div class="exp-perfil-card" *ngIf="usuarioActual">
+        <div class="exp-perfil-header">
+          <div class="exp-perfil-avatar">
+            <ion-icon name="person"></ion-icon>
+          </div>
+          <div *ngIf="rolActual === 'veterinario'">
+            <p class="exp-perfil-nombre">Dr. {{ usuarioActual.Nombre | titlecase }} {{ usuarioActual.Apellido | titlecase }}</p>
+            <p class="exp-perfil-sub">{{ usuarioActual.Especialidad || 'Médico General' }}</p>
+          </div>
+          <div *ngIf="rolActual === 'administrador'">
+            <ion-badge color="tertiary">Panel Admin</ion-badge>
+            <p class="exp-perfil-nombre">{{ usuarioActual.Nombre || 'Administrador' }}</p>
+          </div>
+        </div>
+        <div class="exp-perfil-footer">
+          <p *ngIf="rolActual === 'veterinario'" class="exp-perfil-hint">
+            <ion-icon name="funnel-outline"></ion-icon> Solo tus consultas
+          </p>
+          <p *ngIf="rolActual === 'administrador'" class="exp-perfil-hint exp-perfil-hint--green">
+            <ion-icon name="eye-outline"></ion-icon> Historial completo
+          </p>
+        </div>
+      </div>
+
+      <div class="exp-antecedentes-card">
+        <div class="exp-card-header">
+          <h3><ion-icon name="medical"></ion-icon> Antecedentes Médicos</h3>
+          <ion-button fill="clear" size="small" *ngIf="!editandoAntecedentes"
+            (click)="editandoAntecedentes = true">
+            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+          </ion-button>
+        </div>
+
+        <div class="exp-ant-grid" *ngIf="!editandoAntecedentes">
+          <div class="exp-info-box"><strong>Alergias</strong><p>{{ antecedentesForm.alergias || 'Sin registro' }}</p></div>
+          <div class="exp-info-box"><strong>Cirugías</strong><p>{{ antecedentesForm.cirugias || 'Sin registro' }}</p></div>
+          <div class="exp-info-box"><strong>Enf. Crónicas</strong><p>{{ antecedentesForm.enfermedadesCr || 'Sin registro' }}</p></div>
+          <div class="exp-info-box"><strong>Vacunación</strong><p>{{ antecedentesForm.esquemaVacunacion || 'Sin registro' }}</p></div>
+          <div class="exp-info-box"><strong>Dieta</strong><p>{{ antecedentesForm.dieta || 'Estándar' }}</p></div>
+        </div>
+
+        <div *ngIf="editandoAntecedentes">
+          <div class="exp-ant-form-grid">
+            <ion-item lines="none" class="exp-input-item"><ion-input label="Alergias" labelPlacement="floating" [(ngModel)]="antecedentesForm.alergias"></ion-input></ion-item>
+            <ion-item lines="none" class="exp-input-item"><ion-input label="Cirugías" labelPlacement="floating" [(ngModel)]="antecedentesForm.cirugias"></ion-input></ion-item>
+            <ion-item lines="none" class="exp-input-item"><ion-input label="Enf. Crónicas" labelPlacement="floating" [(ngModel)]="antecedentesForm.enfermedadesCr"></ion-input></ion-item>
+            <ion-item lines="none" class="exp-input-item"><ion-input label="Vacunas" labelPlacement="floating" [(ngModel)]="antecedentesForm.esquemaVacunacion"></ion-input></ion-item>
+            <ion-item lines="none" class="exp-input-item"><ion-input label="Dieta" labelPlacement="floating" [(ngModel)]="antecedentesForm.dieta"></ion-input></ion-item>
+          </div>
+          <div class="exp-form-actions">
+            <ion-button color="medium" fill="clear" (click)="editandoAntecedentes = false">Cancelar</ion-button>
+            <ion-button color="primary" (click)="guardarAntecedentes()">Guardar</ion-button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         SECCIÓN CONSULTAS — layout adaptativo
+    ══════════════════════════════════════════════ -->
+<div class="exp-consultas-section">
+
+  <!-- Lista de consultas pasadas -->
+  <div class="exp-col exp-col--pasadas">
+    <div class="exp-col-header">
+      <ion-icon name="time-outline"></ion-icon> Consultas Anteriores
+    </div>
+    <div class="exp-col-body">
+      <div class="exp-empty" *ngIf="citasPasadas.length === 0">
+        <ion-icon name="document-outline"></ion-icon>
+        <p>Sin consultas previas</p>
+      </div>
+      <div
+        class="exp-cita-item"
+        *ngFor="let cita of citasPasadas"
+        [class.exp-cita-active]="citaSeleccionada?.idCita === cita.idCita"
+        (click)="seleccionarCita(cita)">
+        <div class="exp-cita-top">
+          <span class="exp-cita-fecha">{{ cita.fecha }}</span>
+          <ion-badge [color]="cita.estado === 'finalizada' ? 'success' : 'medium'">
+            {{ cita.estado === 'finalizada' ? 'Finalizada' : 'No asistió' }}
+          </ion-badge>
+        </div>
+        <span class="exp-cita-vet">Dr. {{ cita.nombreVeterinario }}</span>
+        <span class="exp-cita-tipo">{{ cita.tipo }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detalle de consulta -->
+  <div class="exp-col exp-col--detalle">
+    <div class="exp-col-header">
+      <ion-icon name="document-text-outline"></ion-icon> Detalle de la Consulta
+    </div>
+    <div class="exp-col-body">
+
+      <div class="exp-empty exp-empty--icon" *ngIf="!citaSeleccionada">
+        <ion-icon name="paw-outline"></ion-icon>
+        <p>Selecciona una consulta para ver los detalles</p>
+      </div>
+
+      <ng-container *ngIf="citaSeleccionada">
+        <div class="exp-resumen">
+          <div class="exp-resumen-row">
+            <div>
+              <p class="exp-resumen-fecha">{{ citaSeleccionada.fecha }}</p>
+              <p class="exp-resumen-tipo">{{ citaSeleccionada.tipo }}</p>
+            </div>
+            <ion-badge [color]="citaSeleccionada.estado === 'finalizada' ? 'success' : 'medium'">
+              {{ citaSeleccionada.estado === 'finalizada' ? 'Finalizada' : 'No asistió' }}
+            </ion-badge>
+          </div>
+          <p class="exp-resumen-vet">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            Dr/a. {{ citaSeleccionada.nombreVeterinario }}
+          </p>
+        </div>
+
+        <ng-container *ngIf="diagnosticoSeleccionado">
+          <div class="exp-diag-section">
+            <h4><ion-icon name="alert-circle-outline"></ion-icon> Síntomas</h4>
+            <p>{{ diagnosticoSeleccionado.sintomas }}</p>
+          </div>
+          <div class="exp-diag-section">
+            <h4><ion-icon name="medical-outline"></ion-icon> Diagnóstico</h4>
+            <p>{{ diagnosticoSeleccionado.diagnostico }}</p>
+          </div>
+          <div class="exp-diag-section">
+            <h4><ion-icon name="bandage-outline"></ion-icon> Tratamiento</h4>
+            <p>{{ diagnosticoSeleccionado.tratamiento }}</p>
+          </div>
+          <div class="exp-diag-section" *ngIf="diagnosticoSeleccionado.medicamentos">
+            <h4><ion-icon name="flask-outline"></ion-icon> Medicamentos</h4>
+            <p>{{ diagnosticoSeleccionado.medicamentos }}</p>
+          </div>
+          <ion-button expand="block" (click)="generarPDF()" class="exp-btn-pdf">
+            <ion-icon name="download-outline" slot="start"></ion-icon>
+            Generar Reporte PDF
+          </ion-button>
+        </ng-container>
+
+        <div class="exp-empty" *ngIf="!diagnosticoSeleccionado && citaSeleccionada.estado === 'finalizada'">
+          <ion-icon name="clipboard-outline"></ion-icon>
+          <p>Sin diagnóstico registrado.</p>
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+
+</div>
+
+  </ng-container>
+</ion-content>

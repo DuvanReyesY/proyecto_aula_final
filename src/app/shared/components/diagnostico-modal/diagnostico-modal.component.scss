@@ -1,0 +1,221 @@
+// Forzar tema claro en el contenedor del modal
+:host {
+  --ion-background-color: #ffffff;
+  --ion-text-color: #2d3748;
+  --ion-color-step-150: #f7fafc;
+  font-family: inherit;
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ffffff;
+
+  ion-icon {
+    font-size: 1.2rem;
+  }
+}
+
+ion-toolbar {
+  --background: #007f6e; /* Tu verde teal corporativo */
+  --color: #ffffff;
+  padding: 4px 8px;
+}
+
+.modal-content {
+  --background: #f8fafc; /* Fondo gris ultra claro premium */
+}
+
+// ── Resumen de la Cita (Tarjeta Superior) ─────────────────────
+.cita-resumen {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #007f6e; /* Línea verde característica */
+
+  .cita-resumen-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+
+    &:last-of-type { margin-bottom: 0; }
+  }
+
+  ion-icon {
+    font-size: 1.1rem;
+    &[color="primary"] { --color: #007f6e; }
+  }
+
+  .cita-resumen-val {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #1a202c;
+  }
+
+  .cita-resumen-sep {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+  }
+
+  .cita-resumen-sub {
+    font-size: 0.85rem;
+    color: #4a5568;
+    font-weight: 500;
+  }
+
+  .badge-finalizada {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    --background: #e6fffa;
+    color: #007f6e;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+}
+
+// ── Aviso Solo Lectura ─────────────────────────────────────────
+.aviso-lectura {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fffaf0;
+  border-left: 4px solid #dd6b20;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  font-size: 0.8rem;
+  color: #dd6b20;
+  font-weight: 500;
+}
+
+// ── Formulario e Inputs ───────────────────────────────────────
+.form-group {
+  margin-bottom: 18px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #4a5568;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+
+  .required {
+    color: #e53e3e;
+    margin-left: 2px;
+  }
+}
+
+.custom-textarea {
+  width: 100%;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: #1a202c;
+  background: #ffffff;
+  resize: none;
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.01);
+
+  &::placeholder {
+    color: #a0aec0;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #007f6e;
+    box-shadow: 0 0 0 3px rgba(0, 127, 110, 0.1);
+  }
+
+  &[readonly] {
+    background: #f1f5f9;
+    color: #64748b;
+    cursor: default;
+    border-color: #cbd5e1;
+    box-shadow: none;
+  }
+}
+
+.campo-vacio {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #e53e3e;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+// ── Footer y Botones ──────────────────────────────────────────
+.modal-footer-ion {
+  border-top: 1px solid #e2e8f0;
+  background: #ffffff;
+}
+
+.modal-footer-custom {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #ffffff;
+
+  button {
+    flex: 1;
+    height: 46px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    transition: all 0.2s ease;
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-cancel-custom {
+    background: #ffffff;
+    color: #4a5568;
+    border: 1.5px solid #cbd5e1;
+
+    &:hover:not(:disabled) {
+      background: #f7fafc;
+      border-color: #94a3b8;
+    }
+  }
+
+  .btn-save-custom {
+    background: #007f6e;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 127, 110, 0.2);
+
+    &:hover:not(:disabled) {
+      background: #006658;
+    }
+
+    ion-spinner {
+      --color: #ffffff;
+    }
+  }
+}

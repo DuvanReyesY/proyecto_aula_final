@@ -1,0 +1,422 @@
+.exp-content {
+  --background: #f4f6f9;
+}
+
+// ── Header mascota ───────────────────────────────────────────────
+.exp-mascota-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin: 16px 16px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.exp-mascota-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.exp-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e6f4f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  ion-icon { font-size: 1.3rem; color: #008080; }
+}
+
+.exp-nombre {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ion-color-primary);
+  text-transform: capitalize;
+}
+
+.exp-sub {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #64748b;
+  text-transform: capitalize;
+}
+
+.exp-mascota-right {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #1e293b;
+  flex-wrap: wrap;
+}
+
+// ── Top grid ─────────────────────────────────────────────────────
+.exp-top-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 14px;
+  margin: 14px 16px 0;
+  align-items: start;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Perfil card ──────────────────────────────────────────────────
+.exp-perfil-card {
+  background: white;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  border-left: 4px solid var(--ion-color-tertiary);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exp-perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.exp-perfil-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  ion-icon { font-size: 20px; color: #64748b; }
+}
+
+.exp-perfil-nombre {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.exp-perfil-sub {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: #64748b;
+  text-transform: capitalize;
+}
+
+.exp-perfil-footer {
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 8px;
+}
+
+.exp-perfil-hint {
+  margin: 0;
+  font-size: 11px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  &--green { color: #16a34a; }
+}
+
+// ── Antecedentes card ────────────────────────────────────────────
+.exp-antecedentes-card {
+  background: white;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+.exp-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  h3 {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+.exp-ant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.exp-info-box {
+  background: #f8fafc;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border-left: 3px solid #008080;
+  strong {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-bottom: 3px;
+  }
+  p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: #1e293b;
+    font-weight: 500;
+  }
+}
+
+.exp-ant-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+.exp-input-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  --background: #fff;
+  --color: #1e293b;
+}
+
+.exp-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SECCIÓN CONSULTAS — el núcleo del cambio
+// ══════════════════════════════════════════════════════════════════
+.exp-consultas-section {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 14px;
+  margin: 14px 16px 24px;
+  height: 460px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 12px;
+  }
+}
+
+.exp-col {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 460px;
+
+  @media (max-width: 600px) {
+    height: 320px;
+  }
+
+  &--detalle { border-top: 3px solid var(--ion-color-primary); }
+  &--pasadas { border-top: 3px solid #94a3b8; }
+}
+
+.exp-col-header {
+  background: #f8fafc;
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 0.83rem;
+  color: #475569;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  // Para el botón "Volver" en móvil
+  justify-content: space-between;
+}
+
+.exp-col-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  // Scroll suave en iOS
+  -webkit-overflow-scrolling: touch;
+}
+
+// ── Botón volver móvil ───────────────────────────────────────────
+.exp-btn-back-mobile {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--ion-color-primary);
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0;
+
+  @media (min-width: 601px) {
+    display: none !important;
+  }
+}
+
+// ── Items de cita ────────────────────────────────────────────────
+.exp-cita-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+
+  &:hover {
+    background: #f8fafc;
+    transform: translateY(-1px);
+  }
+
+  &.exp-cita-active {
+    background: #eff6ff;
+    border-color: var(--ion-color-primary);
+    border-left: 3px solid var(--ion-color-primary);
+  }
+
+  &--upcoming {
+    cursor: default;
+    border-left: 3px solid var(--ion-color-tertiary);
+    &:hover { transform: none; background: white; }
+  }
+}
+
+.exp-cita-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+
+.exp-cita-fecha {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #1e293b;
+}
+
+.exp-cita-vet {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.exp-cita-tipo {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+// ── Estados vacíos ───────────────────────────────────────────────
+.exp-empty {
+  text-align: center;
+  padding: 24px 12px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+
+  ion-icon {
+    font-size: 2rem;
+    color: #cbd5e1;
+    display: block;
+    margin: 0 auto 8px;
+  }
+
+  &--icon {
+    padding: 40px 16px;
+    ion-icon { font-size: 2.8rem; }
+    p { margin: 0; }
+  }
+}
+
+// ── Resumen de cita seleccionada ─────────────────────────────────
+.exp-resumen {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border: 1px solid #e2e8f0;
+}
+
+.exp-resumen-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.exp-resumen-fecha {
+  margin: 0 0 2px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ion-color-primary);
+}
+
+.exp-resumen-tipo {
+  margin: 0;
+  font-size: 0.83rem;
+  color: #475569;
+}
+
+.exp-resumen-vet {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+// ── Secciones de diagnóstico ─────────────────────────────────────
+.exp-diag-section {
+  margin-bottom: 12px;
+
+  h4 {
+    margin: 0 0 5px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    ion-icon { font-size: 0.9rem; }
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: #1e293b;
+    background: #f8fafc;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    line-height: 1.5;
+  }
+}
+
+.exp-btn-pdf {
+  margin-top: 14px;
+  --border-radius: 8px;
+}
