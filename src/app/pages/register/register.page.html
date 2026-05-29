@@ -1,9 +1,16 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header class="ion-no-border">
+  <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/usuarios" text=""></ion-back-button>
+      <ion-button fill="clear" (click)="cerrarModal(false)">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>{{ modoEdicion ? 'Editar Usuario' : 'Nuevo Usuario' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="submit()" [disabled]="registrando || guardando">
+        <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -62,14 +69,24 @@
         <label>Nombre <span class="req">*</span></label>
         <div class="input-wrap">
           <ion-icon name="person-outline" class="input-icon"></ion-icon>
-          <input type="text" [(ngModel)]="user.Nombre" placeholder="Ej: Juan" />
+          <input
+              type="text"
+              [(ngModel)]="user.Nombre"
+              placeholder="Ej: Juan"
+              (input)="soloLetras($event, 'Nombre')"
+            />
         </div>
       </div>
       <div class="campo">
         <label>Apellido <span class="req">*</span></label>
         <div class="input-wrap">
           <ion-icon name="person-outline" class="input-icon"></ion-icon>
-          <input type="text" [(ngModel)]="user.Apellido" placeholder="Ej: Pérez" />
+         <input
+          type="text"
+          [(ngModel)]="user.Apellido"
+          placeholder="Ej: Pérez"
+          (input)="soloLetras($event, 'Apellido')"
+        />
         </div>
       </div>
     </div>
@@ -87,7 +104,15 @@
       <label>Teléfono</label>
       <div class="input-wrap">
         <ion-icon name="call-outline" class="input-icon"></ion-icon>
-        <input type="tel" [(ngModel)]="user.Telefono" placeholder="Ej: 3001234567" />
+       <input
+          type="tel"
+          [(ngModel)]="user.Telefono"
+          placeholder="Ej: 3001234567"
+          maxlength="15"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          (input)="soloNumerosTelefono($event)"
+        />
       </div>
     </div>
 

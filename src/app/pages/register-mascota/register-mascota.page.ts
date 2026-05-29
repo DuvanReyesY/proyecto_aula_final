@@ -1,7 +1,7 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';  // ← agrega Input
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PopoverController, ToastController } from '@ionic/angular';
+import { ModalController, PopoverController, ToastController } from '@ionic/angular';  // ← agrega ModalController
 import { Auth } from '@angular/fire/auth';
 import { inject } from '@angular/core';
 
@@ -16,7 +16,10 @@ import { UserService } from 'src/app/core/services/user.service';
 })
 export class RegisterMascotaPage implements OnInit {
 
-
+  // ── Inputs desde el modal ──────────────────────────────
+  @Input() modo: 'crear' | 'editar' = 'crear';
+  @Input() mascotaId?: string;
+  @Input() clienteId?: string;
 
   idClienteEdit = '';
   form!: FormGroup;
@@ -44,11 +47,22 @@ export class RegisterMascotaPage implements OnInit {
     private userSvc:     UserService,
     private popoverCtrl: PopoverController,
     private toastCtrl:   ToastController,
+    private modalCtrl:   ModalController,   // ← agrega esto
   ) {}
 
   async ngOnInit() {
     this.construirFormulario();
 
+    // ── Si viene como modal, usa los @Input directamente ──
+    if (this.modo === 'editar' && this.mascotaId) {
+      this.modoEdicion   = true;
+      this.idMascotaEdit = this.mascotaId;
+      this.idClienteEdit = this.clienteId ?? '';
+      await this.cargarMascota(this.mascotaId);
+      return;
+    }
+
+    // ── Fallback: si se abre por ruta (queryParams) ────────
     this.route.queryParams.subscribe(async params => {
       if (params['modo'] === 'editar' && params['id']) {
         this.modoEdicion   = true;
@@ -59,6 +73,11 @@ export class RegisterMascotaPage implements OnInit {
         this.modoEdicion = false;
       }
     });
+  }
+
+  // ── Cierra el modal con resultado ─────────────────────────
+  cerrarModal(guardado = false) {
+    this.modalCtrl.dismiss({ guardado });
   }
 
   private construirFormulario() {
@@ -165,7 +184,7 @@ export class RegisterMascotaPage implements OnInit {
         await this.mascotaSvc.registrarMascota(datos);
         this.mostrarToast('Mascota registrada correctamente', 'success');
       }
-      this.router.navigate(['/layout/mascotas']);
+      this.cerrarModal(true);   // ← reemplaza router.navigate
     } catch {
       this.mostrarToast('Error al guardar la mascota', 'danger');
     } finally {
@@ -187,14 +206,12 @@ export class RegisterMascotaPage implements OnInit {
     await toast.present();
   }
 
-onFechaNativaChange(event: any) {
-  const fecha = event.target.value ?? '';
-  if (fecha) {
-    this.fc['fechaNacimiento'].setValue(fecha);
-    this.fc['fechaNacimiento'].markAsDirty();
-    this.fc['fechaNacimiento'].markAsTouched();
+  onFechaNativaChange(event: any) {
+    const fecha = event.target.value ?? '';
+    if (fecha) {
+      this.fc['fechaNacimiento'].setValue(fecha);
+      this.fc['fechaNacimiento'].markAsDirty();
+      this.fc['fechaNacimiento'].markAsTouched();
+    }
   }
-}
-
-
 }

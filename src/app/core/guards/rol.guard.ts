@@ -1,15 +1,38 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-export const rolGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
-  const auth        = inject(AuthService);
-  const router      = inject(Router);
-  const rolesValidos: string[] = route.data['roles'];
-  const rolActual               = auth.getRolActual();
+// ── Guard: solo permite acceso si el rol coincide ─────────────────────────
+export const rolGuard = (rolesPermitidos: string[]): CanActivateFn => {
+  return () => {
+    const authService = inject(AuthService);
+    const router      = inject(Router);
 
-  if (rolActual && rolesValidos.includes(rolActual)) return true;
+    const rol = authService.getRolActual();
 
-  router.navigate(['/login']);
-  return false;
+    if (!rol) {
+      // Sin sesión → login
+      router.navigate(['/login'], { replaceUrl: true });
+      return false;
+    }
+
+    if (rolesPermitidos.includes(rol)) {
+      return true; // ✅ Rol permitido, deja pasar
+    }
+
+    // ── Redirige a su home según su rol real ──────────────────────────────
+    switch (rol) {
+      case 'cliente':
+        router.navigate(['/layout/cliente-home'], { replaceUrl: true });
+        break;
+      case 'veterinario':
+        router.navigate(['/layout/veterinario-home'], { replaceUrl: true });
+        break;
+      default:
+        router.navigate(['/layout/dashboard'], { replaceUrl: true });
+        break;
+    }
+
+    return false; // ❌ Bloquea la ruta solicitada
+  };
 };

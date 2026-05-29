@@ -1,13 +1,10 @@
+// citas-routing.module.ts
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
-import { CitasPage } from './citas.page';
+import { CitaPage } from './citas.page'; // ← CitaPage
 
 const routes: Routes = [
-  {
-    path: '',
-    component: CitasPage
-  }
+  { path: '', component: CitaPage } // ← CitaPage
 ];
 
 @NgModule({

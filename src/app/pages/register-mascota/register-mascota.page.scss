@@ -1,17 +1,69 @@
 // =============================================
-// REGISTER MASCOTA PAGE
+// REGISTER MASCOTA PAGE — Diseño protagonista
 // =============================================
 
 .nueva-mascota-content {
   --background: #f1f5f9;
 }
 
+// ── HERO superior ────────────────────────────
+.mascota-hero {
+  background: var(--ion-color-primary);
+  padding: 24px 20px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120%;
+    height: 56px;
+    background: #f1f5f9;
+    border-radius: 50%;
+  }
+}
+
+.hero-icon-mascota {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  font-size: 32px;
+  color: #fff;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title-mascota {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+
+.hero-sub-mascota {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  margin: 0;
+}
+
 // ── Formulario ───────────────────────────────
 .form-mascota {
-  padding: 16px 16px 40px;
+  padding: 12px 16px 40px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 // ── Secciones ────────────────────────────────
@@ -19,18 +71,30 @@
   background: #fff;
   border-radius: 20px;
   padding: 18px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .section-header {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1.5px solid #f3f4f6;
 
-  ion-icon {
-    font-size: 18px;
-    color: var(--ion-color-primary);
+  .section-icon-wrap {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(var(--ion-color-primary-rgb), 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-icon {
+      font-size: 17px;
+      color: var(--ion-color-primary);
+    }
   }
 
   h3 {
@@ -39,7 +103,7 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.6px;
-    color: #6b7280;
+    color: #374151;
   }
 }
 
@@ -53,22 +117,25 @@
   margin-bottom: 10px;
   border-radius: 12px;
   border: 1.5px solid #e5e7eb;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 
   &.item-has-focus {
     border-color: var(--ion-color-primary);
+    box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.1);
   }
 
   ion-label {
     font-size: 11px !important;
     font-weight: 700 !important;
-    color: #374151 !important;
+    color: #6b7280 !important;
     text-transform: uppercase;
     letter-spacing: 0.4px;
   }
 
-  ion-input, ion-select {
+  ion-input,
+  ion-select {
     font-size: 14px;
+    font-weight: 600;
     color: #1f2937;
     --placeholder-color: #d1d5db;
     margin-top: 4px;
@@ -82,10 +149,11 @@
   border-radius: 12px;
   padding: 12px 14px;
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 
   &:active {
     border-color: var(--ion-color-primary);
+    box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.1);
   }
 }
 
@@ -96,10 +164,10 @@
 }
 
 .cliente-avatar-sm {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: var(--ion-color-primary);
+  background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
   color: #fff;
   display: flex;
   align-items: center;
@@ -107,6 +175,7 @@
   font-size: 13px;
   font-weight: 800;
   flex-shrink: 0;
+  box-shadow: 0 3px 8px rgba(var(--ion-color-primary-rgb), 0.35);
 }
 
 .cliente-datos {
@@ -142,6 +211,8 @@
 
   ion-icon:first-child {
     font-size: 18px;
+    color: var(--ion-color-primary);
+    opacity: 0.6;
   }
 
   span { flex: 1; }
@@ -149,7 +220,7 @@
 
 .campo-icono {
   font-size: 16px;
-  color: #9ca3af;
+  color: #d1d5db;
 }
 
 // ── Razas cargando ───────────────────────────
@@ -170,33 +241,92 @@
   color: #ef4444;
   font-size: 12px;
   font-weight: 600;
-  padding: 4px 4px 8px;
+  padding: 2px 4px 8px;
+  background: #fef2f2;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  padding: 6px 10px;
 
-  ion-icon { font-size: 14px; }
+  ion-icon { font-size: 14px; flex-shrink: 0; }
 }
 
 .req { color: #ef4444; }
 
 // ── Botón guardar ────────────────────────────
 .btn-guardar-wrap {
-  padding: 8px 0 0;
+  padding: 4px 0 calc(16px + var(--ion-safe-area-bottom, 16px));
 
   ion-button {
     --border-radius: 14px;
-    height: 52px;
+    --box-shadow: 0 6px 20px rgba(var(--ion-color-primary-rgb), 0.4);
+    height: 54px;
     font-size: 15px;
     font-weight: 800;
     letter-spacing: 0.2px;
   }
 }
 
+// ── Fecha nativa ─────────────────────────────
 .fecha-input-nativa {
   width: 100%;
   border: none;
   outline: none;
   background: transparent;
-  font-size: 1rem;
-  color: var(--ion-text-color);
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
   padding: 10px 0;
   font-family: inherit;
+}
+
+// ── Modal host ───────────────────────────────
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  ion-content {
+    --padding-bottom: 20px;
+  }
+}
+.foto-upload-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.foto-preview-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px dashed var(--ion-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--ion-color-light);
+
+  .foto-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .foto-placeholder-icon {
+    font-size: 32px;
+    color: var(--ion-color-medium);
+  }
+}
+
+.foto-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.btn-foto-label {
+  cursor: pointer;
+  ion-button { pointer-events: none; }  // el click lo maneja el <label>
 }

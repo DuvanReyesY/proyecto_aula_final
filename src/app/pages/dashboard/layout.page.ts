@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { PrivilegiosService } from 'src/app/core/services/privilegios.service';
+import { Router } from '@angular/router';
+// ✅ Removido rolGuard — no se usa en el componente
 
 @Component({
   selector: 'app-layout',
@@ -10,6 +12,8 @@ import { PrivilegiosService } from 'src/app/core/services/privilegios.service';
   standalone: false
 })
 export class LayoutPage implements OnInit {
+  
+  private router = inject(Router);
 
   rol: string = '';
   uid: string = '';
@@ -18,6 +22,10 @@ export class LayoutPage implements OnInit {
   privilegios: any = {};
   tabs: any[] = [];
   menuItems: any[] = [];
+
+    irAConfiguracion() {
+    this.router.navigate(['/layout/configuracion']);
+  }
 
   constructor(
     private authService: AuthService,
@@ -29,14 +37,12 @@ export class LayoutPage implements OnInit {
     this.rol = this.authService.getRolActual() ?? '';
     this.uid = this.authService.getUidActual() ?? '';
 
-    // ✅ Obtener nombre real desde Firestore usando uid y rol
     const coleccion = this.userService.getColeccionPorRol(this.rol);
     const userData  = await this.userService.getDocumentOnce(coleccion, this.uid);
     this.nombreUsuario = userData
       ? `${userData.Nombre ?? ''} ${userData.Apellido ?? ''}`.trim()
       : this.uid;
 
-    // ✅ Cargar privilegios solo para roles que los usan
     if (this.rol === 'recepcionista' || this.rol === 'veterinario' || this.rol === 'cliente') {
       this.privilegiosService.getPrivilegios(this.uid).subscribe(p => {
         this.privilegios = p ?? {};
@@ -52,6 +58,7 @@ export class LayoutPage implements OnInit {
     const esRecepcionista = this.rol === 'recepcionista';
     const esVeterinario   = this.rol === 'veterinario';
     const esCliente       = this.rol === 'cliente';
+    const esStaff         = esAdmin || esRecepcionista || esVeterinario; // ✅ Agrupador útil
 
     const p = this.privilegios;
 
@@ -70,7 +77,13 @@ export class LayoutPage implements OnInit {
         label: 'Inicio',
         icon: 'home-outline',
         ruta: '/layout/dashboard',
-        visible: true
+        visible: esStaff        // ✅ Solo staff ve este inicio
+      },
+      {
+        label: 'Inicio',        // ✅ Mismo label, ruta distinta para el cliente
+        icon: 'home-outline',
+        ruta: '/layout/cliente-home',
+        visible: esCliente      // ✅ Solo clientes ven este inicio
       },
       {
         label: 'Usuarios',
@@ -82,33 +95,33 @@ export class LayoutPage implements OnInit {
         label: 'Mascotas',
         icon: 'paw-outline',
         ruta: '/layout/mascotas',
-        visible: puedeVerMascotas
+        visible: esRecepcionista || esAdmin 
       },
       {
         label: 'Citas',
         icon: 'calendar-outline',
         ruta: '/layout/citas',
-        visible: puedeVerCitas
+        visible: esRecepcionista || esAdmin 
       },
       {
         label: 'Historial Médico',
         icon: 'document-text-outline',
         ruta: '/layout/historial',
-        visible: puedeVerHistorial
+        visible: esRecepcionista || esAdmin || esVeterinario
       },
       {
-        label: 'Calendario',
-        icon: 'calendar-number-outline',
-        ruta: '/layout/calendario',
-        visible: puedeVerCalendario
+        label: 'Configuración',
+        icon: 'settings-outline',
+        ruta: '/layout/configuracion',
+        visible: false
       },
       {
-        label: 'Privilegios',
-        icon: 'shield-checkmark-outline',
-        ruta: '/layout/privilegios',
-        visible: esAdmin,
-        color: 'warning'
+        label: 'Diagnosticar Citas',
+        icon: 'home-outline',
+        ruta: '/layout/veterinario-home',
+        visible: esVeterinario
       }
+
     ];
 
     this.tabs = [
@@ -117,7 +130,21 @@ export class LayoutPage implements OnInit {
         href: '/layout/dashboard',
         icon: 'home-outline',
         label: 'Inicio',
-        visible: true
+        visible: esStaff        // ✅ Solo staff
+      },
+      {
+        tab: 'cliente-home',    // ✅ Corregido: tab y href faltaban
+        href: '/layout/cliente-home',
+        icon: 'home-outline',
+        label: 'Inicio',
+        visible: esCliente      // ✅ Solo clientes
+      },
+      {
+        tab: 'veterinario-home',
+        href: '/layout/veterinario-home',
+        icon: 'home-outline',
+        label: 'Inicio',
+        visible: esVeterinario
       },
       {
         tab: 'usuarios',
@@ -131,21 +158,35 @@ export class LayoutPage implements OnInit {
         href: '/layout/mascotas',
         icon: 'paw-outline',
         label: 'Mascotas',
-        visible: puedeVerMascotas
+        visible: esRecepcionista || esAdmin 
       },
       {
         tab: 'citas',
         href: '/layout/citas',
         icon: 'calendar-outline',
         label: 'Citas',
-        visible: puedeVerCitas
+        visible: esRecepcionista || esAdmin 
       },
       {
         tab: 'historial',
         href: '/layout/historial',
         icon: 'document-text-outline',
         label: 'Historial',
-        visible: puedeVerHistorial
+        visible: esRecepcionista || esAdmin || esVeterinario
+      },
+      {
+        tab: 'reportes',
+        href: '/layout/reportes',
+        icon: 'bar-chart-outline',
+        label: 'Reportes',
+        visible: esAdmin           // ✅ Solo admin
+      },
+      {
+        tab: 'configuracion',
+        href: '/layout/configuracion',
+        icon: 'settings-outline',
+        label: 'Configuración',
+        visible: false      
       }
     ];
   }

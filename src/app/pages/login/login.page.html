@@ -1,36 +1,140 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Iniciar Sesión</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="ion-padding">
-
-  <div class="logo-container">
-    <ion-icon name="paw" size="large" color="primary"></ion-icon>
-    <h2>Veterinaria Canes</h2>
+<ion-content class="login-content" [fullscreen]="true">
+  <!-- Fondo animado con gradientes -->
+  <div class="animated-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
   </div>
 
-  <ion-item>
-    <ion-label position="floating">Correo</ion-label>
-    <ion-input type="email" [(ngModel)]="email" placeholder="correo@ejemplo.com"></ion-input>
-  </ion-item>
+  <div class="login-container">
+    
+    <!-- Panel izquierdo - Branding -->
+    <div class="brand-panel">
+      <div class="brand-glass">
+        <div class="brand-content">
+          <div class="logo-wrapper">
+            <div class="logo-icon">
+              <ion-icon name="paw"></ion-icon>
+              <div class="logo-glow"></div>
+            </div>
+            <span class="logo-text">Canes</span>
+          </div>
+          
+          <div class="brand-message">
+            <div class="badge">✨ Premium Veterinary Care</div>
+            <h2>Cuidado que <span class="gradient-text">transforma</span><br>vidas</h2>
+            <p>Más de 15 años brindando excelencia en salud animal con tecnología de vanguardia.</p>
+          </div>
+          
+          <div class="stats">
+            <div class="stat-item">
+              <div class="stat-number">15k+</div>
+              <div class="stat-label">Mascotas atendidas</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <div class="stat-number">98%</div>
+              <div class="stat-label">Satisfacción</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <div class="stat-number">24/7</div>
+              <div class="stat-label">Emergencias</div>
+            </div>
+          </div>
 
-  <ion-item>
-    <ion-label position="floating">Contraseña</ion-label>
-    <ion-input type="password" [(ngModel)]="password" placeholder="••••••••"></ion-input>
-  </ion-item>
+          <div class="testimonial">
+            <div class="quote-icon">
+              <ion-icon name="chatbubble-ellipses"></ion-icon>
+            </div>
+            <p>"El equipo de Canes salvó la vida de mi perro. Atención impecable y profesionales increíbles."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">
+                <span>ME</span>
+              </div>
+              <div class="author-info">
+                <strong>María Elena</strong>
+                <span>Dueña de Max</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <ion-text color="danger" *ngIf="error">
-    <p class="ion-padding-start">{{ error }}</p>
-  </ion-text>
+    <!-- Panel derecho - Login -->
+    <div class="login-panel">
+      <div class="login-card">
+        
+        <div class="login-header">
+          <div class="header-badge">
+            <ion-icon name="log-in-outline"></ion-icon>
+            <span>Acceso seguro</span>
+          </div>
+          <h1>Bienvenido de vuelta</h1>
+          <p>Ingresa tus credenciales para acceder al panel de gestión</p>
+        </div>
 
-  <ion-button expand="block" class="ion-margin-top" (click)="login()">
-    Iniciar Sesión
-  </ion-button>
+        <form (ngSubmit)="login()" class="login-form">
+          <!-- Campo Email -->
+          <div class="input-group" [class.error]="!!error">
+            <label>
+              <ion-icon name="mail-outline"></ion-icon>
+              Correo electrónico
+            </label>
+            <div class="input-wrapper">
+              <ion-input
+                type="email"
+                [(ngModel)]="email"
+                name="email"
+                placeholder="nombre@canes.com"
+                [clearInput]="true"
+              ></ion-input>
+            </div>
+          </div>
 
-  <ion-button expand="block" fill="clear" routerLink="/register">
-    ¿No tienes cuenta? Regístrate
-  </ion-button>
+          <!-- Campo Password con botón ojo -->
+          <div class="input-group" [class.error]="!!error">
+            <label>
+              <ion-icon name="lock-closed-outline"></ion-icon>
+              Contraseña
+            </label>
+            <div class="input-wrapper password-wrapper">
+              <ion-input
+                [type]="showPassword ? 'text' : 'password'"
+                [(ngModel)]="password"
+                name="password"
+                placeholder="Ingresa tu contraseña"
+              ></ion-input>
+              <button type="button" class="eye-button" (click)="togglePasswordVisibility()">
+                <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+              </button>
+            </div>
+          </div>
 
+          <!-- Error message -->
+          <div class="error-message" *ngIf="error">
+            <div class="error-icon">
+              <ion-icon name="alert-triangle"></ion-icon>
+            </div>
+            <div class="error-text">
+              <strong>Error de autenticación</strong>
+              <span>{{ error }}</span>
+            </div>
+          </div>
+
+          <!-- Botón submit -->
+          <button type="submit" class="btn-primary" [disabled]="cargando">
+            <span *ngIf="!cargando">Iniciar sesión</span>
+            <div class="btn-loader" *ngIf="cargando">
+              <ion-spinner name="crescent"></ion-spinner>
+              <span>Verificando...</span>
+            </div>
+          </button>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
 </ion-content>

@@ -8,13 +8,23 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class SideMenuComponent {
 
-  @Input() nombreUsuario: string = '';
-  @Input() rol: string = '';
-  @Input() menuItems: any[] = [];
+@Input()  uid            = '';
+@Input()  nombreUsuario  = '';
+@Input()  rol            = '';
+@Input()  menuItems: any[] = [];
+@Output() logoutEvent       = new EventEmitter<void>();
+@Output() irConfiguracion   = new EventEmitter<void>();   // ← nuevo
 
-  @Output() logoutEvent = new EventEmitter<void>();
+get iniciales(): string {
+  const partes = this.nombreUsuario.trim().split(' ');
+  return (partes[0]?.[0] ?? '') + (partes[1]?.[0] ?? '');
+}
 
   logout() {
     this.logoutEvent.emit();
+  }
+
+  irAConfiguracion() {
+    this.irConfiguracion.emit();
   }
 }

@@ -71,10 +71,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let u of usuariosFiltrados; let i = index"
-            class="fila-usuario"
-            [class.fila-clickable]="u.uid !== authService.getUidActual()"
-            (click)="u.uid !== authService.getUidActual() && editarUsuario(u)">
+      <tr *ngFor="let u of usuariosFiltrados; let i = index"
+          class="fila-usuario"
+          [class.fila-clickable]="puedeEditarUsuario(u)"
+          (click)="validarEdicion(u)">
 
           <td class="col-num">{{ i + 1 }}</td>
 
@@ -143,6 +143,14 @@
             <ng-template #accionesTpl>
               <div class="acciones-btns">
                 <button
+                  class="btn-accion btn-resetear"
+                  *ngIf="rolActual === 'administrador' && u.uid !== authService.getUidActual()"
+                  (click)="resetearContrasena(u, $event)"
+                  title="Resetear contraseña">
+                  <ion-icon name="key-outline"></ion-icon>
+                  <span>R-Contraseña</span>
+                </button>
+                <button
                   *ngIf="rolActual === 'administrador' && (u.rol === 'recepcionista' || u.rol === 'veterinario')"
                   class="btn-accion btn-permisos"
                   (click)="abrirPermisos(u); $event.stopPropagation()"
@@ -150,9 +158,16 @@
                   <ion-icon name="shield-checkmark-outline"></ion-icon>
                   <span>Permisos</span>
                 </button>
-
                 <button
-                  class="btn-accion"
+                  *ngIf="u.rol === 'veterinario' && (rolActual === 'administrador')"
+                  class="btn-accion btn-horarios"
+                  (click)="abrirHorarios(u); $event.stopPropagation()"
+                  title="Ver horarios">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  <span>Horarios</span>
+                </button>
+                <button
+                  class="btn-accion" *ngIf="rolActual === 'administrador'"
                   [ngClass]="u.estado === 'activo' ? 'btn-pausar' : 'btn-activar'"
                   (click)="cambiarEstado(u); $event.stopPropagation()"
                   [title]="u.estado === 'activo' ? 'Desactivar' : 'Activar'">
@@ -175,10 +190,10 @@
     <p>No se encontraron usuarios con ese criterio</p>
   </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 60px;">
-    <ion-fab-button color="primary" routerLink="/layout/usuarios/crear">
-      <ion-icon name="person-add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 60px;">
+  <ion-fab-button color="primary"  *ngIf="authService.tienePrivilegio('crearUsuarios') || rolActual === 'administrador'" (click)="nuevoUsuario()">
+    <ion-icon name="person-add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 
 </ion-content>

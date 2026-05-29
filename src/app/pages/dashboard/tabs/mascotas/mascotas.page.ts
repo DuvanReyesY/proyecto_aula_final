@@ -9,9 +9,15 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Auth } from '@angular/fire/auth';
 import { inject } from '@angular/core';
-
+import { ModalController } from '@ionic/angular'; 
 import { MascotaService, Mascota } from 'src/app/core/services/mascota.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { RegisterMascotaPage } from 'src/app/pages/register-mascota/register-mascota.page';
+import { MigrarMascotaComponent } from 'src/app/shared/components/migrar-mascota/migrar-mascota.component';
+import { MascotaDetalleComponent } from 'src/app/shared/components/mascota-detalle/mascota-detalle.component';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { take } from 'rxjs/operators';
+import { CitaService } from 'src/app/core/services/cita.service';
 
 @Component({
   selector: 'app-mascotas',
@@ -39,6 +45,7 @@ export class MascotasPage implements OnInit, OnDestroy {
 
   private auth     = inject(Auth);
   private destroy$ = new Subject<void>();
+  
 
   constructor(
     private mascotaSvc:  MascotaService,
@@ -47,6 +54,9 @@ export class MascotasPage implements OnInit, OnDestroy {
     private alertCtrl:   AlertController,
     private toastCtrl:   ToastController,
     private loadingCtrl: LoadingController,
+    private modalCtrl:   ModalController,
+    public authService: AuthService,
+    private citaSvc: CitaService,
   ) {}
 
   // ── Lifecycle ────────────────────────────────────────────────────
@@ -98,13 +108,24 @@ export class MascotasPage implements OnInit, OnDestroy {
 
   // ── Carga de datos ───────────────────────────────────────────────
 
-  private cargarClientes() {
-    this.userSvc.getTodosLosUsuarios()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(users => {
-        this.clientes = users.filter(u => u.rol === 'cliente');
-      });
-  }
+private cargarClientes() {
+  this.userSvc.getTodosLosUsuarios()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(users => {
+      // Sin filtrar por rol para no perder datos
+      this.clientes = users;
+    });
+}
+
+getNombreCliente(idCliente: string): string {
+  const c = this.clientes.find(x => x.idCliente === idCliente);
+  if (!c) return '—';
+
+  // ✅ Firestore guarda Nombre/Apellido en mayúscula
+  const nombre   = c.Nombre   ?? c.nombre   ?? '';
+  const apellido = c.Apellido ?? c.apellido ?? '';
+  return `${nombre} ${apellido}`.trim() || '—';
+}
 
   private cargarMascotas() {
     this.cargando = true;
@@ -163,11 +184,7 @@ export class MascotasPage implements OnInit, OnDestroy {
 
   // ── Helpers template ─────────────────────────────────────────────
 
-  getNombreCliente(idCliente: string): string {
-    const c = this.clientes.find(x => x.idCliente === idCliente || x.uid === idCliente);
-    if (!c) return '—';
-    return `${c.nombre ?? ''} ${c.apellido ?? ''}`.trim();
-  }
+
 
   getIconoEspecie(especie: string): string {
     const iconos: Record<string, string> = {
@@ -187,25 +204,37 @@ export class MascotasPage implements OnInit, OnDestroy {
   // ── Navegación ───────────────────────────────────────────────────
 
   // En lugar de abrir un modal, navegar como usuarios:
-    nuevaMascota() {
-      this.router.navigate(['/layout/mascotas/register-mascota'], {
-        queryParams: { modo: 'crear' }
-      });
-    }
-
-    editarMascota(mascota: Mascota) {
-      this.router.navigate(['/layout/mascotas/register-mascota'], {
-        queryParams: { 
-          id: mascota.idMascota, 
-          idCliente: mascota.idCliente, 
-          modo: 'editar' 
-        }
-      });
-    }
-
-  verDetalle(mascota: Mascota) {
-    this.router.navigate(['/layout/mascotas', mascota.idMascota]);
+async nuevaMascota() {
+  const modal = await this.modalCtrl.create({
+    component: RegisterMascotaPage,
+    componentProps: { modo: 'crear' },
+    breakpoints: [0, 1],
+    initialBreakpoint: 1,
+  });
+  await modal.present();
+  const { data } = await modal.onWillDismiss();
+  if (data?.guardado) {
+    this.mostrarToast('Mascota registrada exitosamente', 'success');
   }
+}
+
+async editarMascota(mascota: Mascota) {
+  const modal = await this.modalCtrl.create({
+    component: RegisterMascotaPage,
+    componentProps: {
+      modo: 'editar',
+      mascotaId: mascota.idMascota,
+      clienteId: mascota.idCliente,
+    },
+    breakpoints: [0, 1],
+    initialBreakpoint: 1,
+  });
+  await modal.present();
+  const { data } = await modal.onWillDismiss();
+  if (data?.guardado) {
+    this.mostrarToast('Mascota actualizada', 'success');
+  }
+}
 
 
 
@@ -240,70 +269,89 @@ export class MascotasPage implements OnInit, OnDestroy {
     await alert.present();
   }
 
-  async eliminarMascota(mascota: Mascota) {
-    const alert = await this.alertCtrl.create({
-      header:  'Eliminar mascota',
-      message: `Esta acción es <strong>irreversible</strong>. ¿Eliminar a <strong>${mascota.nombre}</strong>?`,
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Eliminar',
-          cssClass: 'danger',
-          handler: async () => {
-            const loading = await this.loadingCtrl.create({ message: 'Eliminando...' });
-            await loading.present();
-            try {
-              await this.mascotaSvc.eliminarMascota(mascota.idCliente, mascota.idMascota);
-              this.mostrarToast(`${mascota.nombre} eliminada`, 'success');
-            } catch {
-              this.mostrarToast('Error al eliminar', 'danger');
-            } finally {
-              await loading.dismiss();
-            }
-          },
+async eliminarMascota(mascota: Mascota) {
+  // Verificar si tiene citas antes de mostrar el alert
+  const citas = await this.citaSvc.getCitasPorMascota(mascota.idMascota)
+    .pipe(take(1))
+    .toPromise();
+
+  if (citas && citas.length > 0) {
+    await this.mostrarToast(
+      `${mascota.nombre} tiene citas registradas y no puede eliminarse`,
+      'warning'
+    );
+    return;
+  }
+
+  const alert = await this.alertCtrl.create({
+    header:  'Eliminar mascota',
+    message: `Esta acción es <strong>irreversible</strong>. ¿Eliminar a <strong>${mascota.nombre}</strong>?`,
+    buttons: [
+      { text: 'Cancelar', role: 'cancel' },
+      {
+        text: 'Eliminar',
+        cssClass: 'danger',
+        handler: async () => {
+          const loading = await this.loadingCtrl.create({ message: 'Eliminando...' });
+          await loading.present();
+          try {
+            await this.mascotaSvc.eliminarMascota(mascota.idCliente, mascota.idMascota);
+            this.mostrarToast(`${mascota.nombre} eliminada`, 'success');
+          } catch {
+            this.mostrarToast('Error al eliminar', 'danger');
+          } finally {
+            await loading.dismiss();
+          }
         },
-      ],
-    });
-    await alert.present();
-  }
-
-  async abrirMigracion() {
-    const opciones = this.mascotas
-      .filter(m => m.estado === 'activo')
-      .map(m => ({ type: 'radio' as const, label: m.nombre, value: m.idMascota }));
-
-    const alert = await this.alertCtrl.create({
-      header:  'Selecciona la mascota a migrar',
-      inputs:  opciones,
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Continuar',
-          handler: (idMascota: string) => {
-            const mascota = this.mascotas.find(m => m.idMascota === idMascota);
-            if (mascota) this.abrirMigracionDirecta(mascota);
-          },
-        },
-      ],
-    });
-    await alert.present();
-  }
-
-  async abrirMigracionDirecta(mascota: Mascota) {
-    handler: async (nuevoIdCliente: string) => {
-  if (!nuevoIdCliente) return;
-  try {
-    // 1. Crear en la nueva subcolección
-    const datosMigrados = { ...mascota, idCliente: nuevoIdCliente };
-    await this.mascotaSvc.registrarMascota(datosMigrados);
-    // 2. Eliminar de la subcolección anterior
-    await this.mascotaSvc.eliminarMascota(mascota.idCliente, mascota.idMascota);
-    this.mostrarToast(`${mascota.nombre} migrada correctamente`, 'success');
-  } catch {
-    this.mostrarToast('Error al migrar la mascota', 'danger');
-  }
+      },
+    ],
+  });
+  await alert.present();
 }
-  }
+
+async abrirMigracion() {
+  const opciones = this.mascotas
+    .filter(m => m.estado === 'activo')
+    .map(m => ({
+      type: 'radio' as const,
+      label: `${m.nombre} — ${this.getNombreCliente(m.idCliente)}`,
+      value: m.idMascota,
+    }));
+
+  const alert = await this.alertCtrl.create({
+    header:  'Selecciona la mascota a migrar',
+    inputs:  opciones,
+    buttons: [
+      { text: 'Cancelar', role: 'cancel' },
+      {
+        text: 'Continuar',
+        handler: (idMascota: string) => {
+          const mascota = this.mascotas.find(m => m.idMascota === idMascota);
+          if (mascota) this.abrirMigracionDirecta(mascota);
+        },
+      },
+    ],
+  });
+  await alert.present();
+}
+
+
+async abrirMigracionDirecta(mascota: Mascota) {
+  const modal = await this.modalCtrl.create({
+    component: MigrarMascotaComponent,
+    componentProps: {
+      mascota,
+      nombrePropietarioActual: this.getNombreCliente(mascota.idCliente),
+    },
+    breakpoints: [0, 0.85, 1],
+    initialBreakpoint: 0.85,
+  });
+
+  await modal.present();
+
+  const { data } = await modal.onWillDismiss();
+  if (data?.migrado) { }
+}
 
   // ── Utilidades ───────────────────────────────────────────────────
 
@@ -331,5 +379,19 @@ export class MascotasPage implements OnInit, OnDestroy {
   return edad;
 }
 
+async verDetalleMascota(mascota: Mascota) {
+  const modal = await this.modalCtrl.create({
+    component: MascotaDetalleComponent,
+    componentProps: { mascota },
+    breakpoints: [0, 0.92, 1],
+    initialBreakpoint: 0.92,
+  });
+  await modal.present();
+
+  const { data } = await modal.onWillDismiss();
+  if (data?.editar) {
+    this.editarMascota(data.editar);
+  }
+}
 
 }

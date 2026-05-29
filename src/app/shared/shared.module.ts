@@ -8,10 +8,24 @@ import { DashboardHeaderComponent } from './components/dashboard-header/dashboar
 import { PrivilegiosModalComponent } from './components/privilegios-modal/privilegios-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 import { ClienteSelectorComponent } from './components/cliente-selector/cliente-selector.component';
+import { MigrarMascotaComponent } from './components/migrar-mascota/migrar-mascota.component';
+import { ReasignarVeterinarioComponent } from './components/reasignar-veterinario/reasignar-veterinario.component';
+import { CalendarGridComponent } from './components/calendar-grid/calendar-grid.component';
+import { MascotaDetalleComponent } from './components/mascota-detalle/mascota-detalle.component';
+import { HistorialCitasComponent } from './components/historial-citas/historial-citas.component';
+import { DiagnosticoModalComponent } from './components/diagnostico-modal/diagnostico-modal.component';
+import { CitasSlotPopoverComponent } from './components/citas-slot-popover/citas-slot-popover.component';
+import { HorarioVeterinarioComponent } from './components/horario-veterinario/horario-veterinario.component';
 
 @NgModule({
-  declarations: [TabBarComponent, SideMenuComponent, DashboardHeaderComponent, PrivilegiosModalComponent, ClienteSelectorComponent],
+  declarations: [TabBarComponent, SideMenuComponent, DashboardHeaderComponent, PrivilegiosModalComponent, 
+    ClienteSelectorComponent, MigrarMascotaComponent, ReasignarVeterinarioComponent, 
+    CalendarGridComponent, MascotaDetalleComponent, HistorialCitasComponent, DiagnosticoModalComponent, CitasSlotPopoverComponent, HorarioVeterinarioComponent],
+
   imports: [CommonModule, IonicModule, RouterModule, FormsModule, ReactiveFormsModule], 
-  exports: [TabBarComponent, SideMenuComponent, DashboardHeaderComponent, PrivilegiosModalComponent, ClienteSelectorComponent, ReactiveFormsModule] 
+
+  exports: [TabBarComponent, SideMenuComponent, DashboardHeaderComponent, PrivilegiosModalComponent, 
+    ClienteSelectorComponent, ReactiveFormsModule, FormsModule, MigrarMascotaComponent, ReasignarVeterinarioComponent,
+     CalendarGridComponent, MascotaDetalleComponent, HistorialCitasComponent, DiagnosticoModalComponent, CitasSlotPopoverComponent, HorarioVeterinarioComponent] 
 })
 export class SharedModule {}

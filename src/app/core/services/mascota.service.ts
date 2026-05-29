@@ -19,6 +19,18 @@ export interface Mascota {
   peso: number;
   estado: 'activo' | 'inactivo';
   fechaRegistro: string;
+  idClienteAnterior?: string;
+  fechaMigracion?: string;
+  antecedentes?: AntecedentesMedicos;
+  fotoUrl?: string;
+}
+
+export interface AntecedentesMedicos {
+  alergias?: string;
+  cirugias?: string;
+  enfermedadesCr?: string; // Crónicas
+  esquemaVacunacion?: string;
+  dieta?: string;
 }
 
 // ─── INTERFACES ──────────────────────────────────────────────────────────────

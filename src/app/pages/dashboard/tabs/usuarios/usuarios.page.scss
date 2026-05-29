@@ -242,7 +242,26 @@
   font-weight: 600;
   ion-icon { font-size: 0.85rem; }
 }
+.btn-resetear {
+  background: #ede9fe;
+  color: #5b21b6;
+  border: 1px solid #c4b5fd;
 
+  &:hover {
+    background: #ddd6fe;
+    border-color: #8b5cf6;
+  }
+}
 
 .btn-editar { background: #f3e8ff; color: #7c3aed; }
 .btn-editar:hover { background: #e9d5ff; }
+
+.btn-horarios {
+  background: rgba(var(--ion-color-tertiary-rgb), 0.12);
+  color: var(--ion-color-tertiary);
+  border: 1px solid rgba(var(--ion-color-tertiary-rgb), 0.3);
+
+  &:hover {
+    background: rgba(var(--ion-color-tertiary-rgb), 0.22);
+  }
+}

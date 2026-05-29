@@ -6,14 +6,19 @@
   </ion-header>
 
   <ion-content>
-    <div class="menu-header">
-      <ion-icon name="person-circle" size="large" color="primary"></ion-icon>
-      <p class="nombre">{{ nombreUsuario }}</p>
-      <ion-badge [color]="rol === 'administrador' ? 'success' :
-                          rol === 'veterinario'   ? 'primary' :
-                          rol === 'recepcionista' ? 'warning' : 'medium'">
-        {{ rol | titlecase }}
-      </ion-badge>
+
+    <!-- Avatar clicable → configuración -->
+    <div class="menu-header" (click)="irConfiguracion.emit()">
+      <div class="avatar-circle">{{ iniciales }}</div>
+      <div class="menu-header__info">
+        <p class="nombre">{{ nombreUsuario }}</p>
+        <ion-badge [color]="rol === 'administrador' ? 'success' :
+                            rol === 'veterinario'   ? 'primary' :
+                            rol === 'recepcionista' ? 'warning' : 'medium'">
+          {{ rol | titlecase }}
+        </ion-badge>
+      </div>
+      <ion-icon name="chevron-forward-outline" class="menu-header__arrow"></ion-icon>
     </div>
 
     <ion-list lines="none">
@@ -35,5 +40,6 @@
         <ion-label color="danger">Cerrar Sesión</ion-label>
       </ion-item>
     </ion-list>
+
   </ion-content>
 </ion-menu>

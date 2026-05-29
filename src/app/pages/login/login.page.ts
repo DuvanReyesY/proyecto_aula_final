@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -7,20 +9,74 @@ import { AuthService } from 'src/app/core/services/auth.service';
   styleUrls: ['./login.page.scss'],
   standalone: false
 })
-export class LoginPage {
-  email: string = '';
-  password: string = '';
-  error: string = '';
+export class LoginPage implements OnInit {
 
-  constructor(private authService: AuthService) {}
+  email:        string  = '';
+  password:     string  = '';
+  error:        string  = '';
+  cargando:     boolean = false;
+  showPassword: boolean = false;
 
-  async login() {
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private router:      Router
+  ) {}
+
+  // ── Al cargar la página: verificar si hay usuarios en la BD ───────────────
+  async ngOnInit() {
+    await this.verificarPrimerUso();
+  }
+
+  private async verificarPrimerUso() {
     try {
-      this.error = '';
+      // Busca si hay al menos un administrador en Firestore
+      const hayAdmins = await this.userService.existeAlgunUsuario();
+
+      if (!hayAdmins) {
+        // Base de datos vacía → redirige a registro del primer admin
+        this.router.navigate(['/register'], {
+          queryParams: { primerAdmin: true },
+          replaceUrl: true
+        });
+      }
+    } catch (err) {
+      console.error('Error verificando primer uso:', err);
+    }
+  }
+  
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  // ── Login ─────────────────────────────────────────────────────────────────
+  async login() {
+    if (!this.email || !this.password) {
+      this.error = 'Por favor completa todos los campos';
+      return;
+    }
+
+    try {
+      this.error    = '';
+      this.cargando = true;
       await this.authService.login(this.email, this.password);
     } catch (err: any) {
-      this.error = 'Correo o contraseña incorrectos';
+      this.error = this.mensajeError(err.code);
       console.error(err);
+    } finally {
+      this.cargando = false;
     }
+  }
+
+  // ── Mensajes de error legibles ────────────────────────────────────────────
+  private mensajeError(code: string): string {
+    const errores: Record<string, string> = {
+      'auth/user-not-found':    'No existe una cuenta con ese correo',
+      'auth/wrong-password':    'Contraseña incorrecta',
+      'auth/invalid-email':     'El correo no es válido',
+      'auth/too-many-requests': 'Demasiados intentos. Espera un momento',
+      'auth/user-disabled':     'Esta cuenta ha sido deshabilitada',
+    };
+    return errores[code] ?? 'Correo o contraseña incorrectos';
   }
 }
