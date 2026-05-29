@@ -23,7 +23,11 @@ const routes: Routes = [
   {
     path: 'register-mascota',
     loadChildren: () => import('./pages/register-mascota/register-mascota.module').then( m => m.RegisterMascotaPageModule)
-  }
+  },
+ /*  {
+    path: 'expediente',
+    loadChildren: () => import('./pages/dashboard/tabs/expediente/expediente.module').then( m => m.ExpedientePageModule)
+  }, */
 ];
 
 @NgModule({

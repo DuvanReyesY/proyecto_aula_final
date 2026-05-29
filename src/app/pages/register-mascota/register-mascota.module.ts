@@ -16,6 +16,7 @@ import { RegisterMascotaPage } from './register-mascota.page';
     IonicModule,
     RegisterMascotaPageRoutingModule
   ],
-  declarations: [RegisterMascotaPage]
+  declarations: [RegisterMascotaPage],
+  exports: [RegisterMascotaPage], 
 })
 export class RegisterMascotaPageModule {}

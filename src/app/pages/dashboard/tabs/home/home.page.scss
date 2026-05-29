@@ -1,146 +1,522 @@
-.home-content { --background: #f0f2f8; }
+// ══════════════════════════════════════════════════════════════
+// dashboard / layout.page.scss
+// Usa el sistema de diseño de global.scss — sin colores hardcodeados
+// ══════════════════════════════════════════════════════════════
 
-.loading-container {
-  display: flex; justify-content: center;
-  padding-top: 45%; 
+// ── Toolbar ─────────────────────────────────────────────────
+.main-toolbar {
+  --background: var(--app-text-1);   // #1f2937 — oscuro neutro del sistema
+  --border-color: transparent;
 }
-
-// ── Header hero ───────────────────────────────────────────────────────────────
-
-.hero-header {
-  background: #2f54eb;
-  padding: 52px 18px 36px;
-  position: relative; overflow: hidden;
-
-  &.hero-recepcionista { background: #d48806; }
-  &.hero-veterinario   { background: #096dd9; }
-  &.hero-cliente       { background: #434343; }
-}
-
-.hero-dec {
-  position: absolute; border-radius: 50%;
-  &-1 { width: 200px; height: 200px; background: rgba(255,255,255,0.06); top: -70px; right: -50px; }
-  &-2 { width: 110px; height: 110px; background: rgba(255,255,255,0.04); bottom: -30px; left: 10px; }
-}
-
-.hero-top {
-  display: flex; align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px; position: relative;
-}
-
-.hero-user { display: flex; align-items: center; gap: 10px; }
-
-.hero-avatar {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(255,255,255,0.18);
-  display: flex; align-items: center; justify-content: center;
-  ion-icon { color: #fff; font-size: 18px; }
-}
-
-.hero-greeting { color: rgba(255,255,255,0.7); font-size: 11px; display: block; }
-.hero-name     { color: #fff; font-size: 15px; font-weight: 600; display: block; }
 
 .notif-btn {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: rgba(255,255,255,0.15); border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  ion-icon { color: #fff; font-size: 18px; }
+  position: relative;
 }
 
-.hero-body { position: relative; }
-
-.role-chip {
-  display: inline-flex; align-items: center; gap: 5px;
-  background: rgba(255,255,255,0.15);
-  border: 0.5px solid rgba(255,255,255,0.2);
-  color: rgba(255,255,255,0.9);
-  font-size: 11px; font-weight: 600;
-  padding: 3px 10px; border-radius: 20px;
-  margin-bottom: 8px;
-  ion-icon { font-size: 12px; }
+.nav-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 9px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  border-radius: var(--app-radius-full);
 }
 
-.hero-body h1 {
-  color: #fff; font-size: 22px; font-weight: 600;
-  line-height: 1.2; margin-bottom: 4px;
+.btn-reportes {
+  --background: var(--app-purple);
+  --background-hover: #7c3aed;
+  --color: white;
+  --border-radius: var(--app-radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  height: 34px;
+  text-transform: none;
+  letter-spacing: 0;
 }
-.hero-body p { color: rgba(255,255,255,0.7); font-size: 13px; }
 
-.hero-date {
-  display: flex; align-items: center; gap: 5px;
-  color: rgba(255,255,255,0.5); font-size: 11px;
-  margin-top: 14px; text-transform: capitalize;
-  ion-icon { font-size: 12px; }
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: var(--app-radius-full);
+  padding: 4px 12px 4px 4px;
+  margin-right: 4px;
 }
 
-// ── Stats flotantes ───────────────────────────────────────────────────────────
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.4);
+}
 
-.stats-float {
-  display: flex; gap: 10px;
-  margin: -22px 16px 0;
-  position: relative; z-index: 2;
+.user-name {
+  font-size: 13px;
+  color: white;
+  font-weight: 500;
+}
+
+// ── Nav tabs ────────────────────────────────────────────────
+.nav-tabs-toolbar {
+  --background: var(--app-surface);
+  --border-width: 0;
+  box-shadow: var(--app-shadow-sm);
+}
+
+.nav-tabs-scroll {
+  display: flex;
+  overflow-x: auto;
+  padding: 0 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.nav-tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 9px 14px;
+  text-decoration: none;
+  color: var(--app-text-2);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: all var(--app-transition);
+
+  ion-icon { font-size: 17px; }
+
+  &.active {
+    color: var(--app-primary);
+    border-bottom-color: var(--app-primary);
+    font-weight: 700;
+  }
+
+  &:hover { color: var(--app-primary); }
+}
+
+// ── Page body ────────────────────────────────────────────────
+.page-body {
+  padding: 16px;
+  background: var(--app-page);
+  min-height: 100%;
+}
+
+// ── Bienvenido ───────────────────────────────────────────────
+.bienvenido-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.bienvenido-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--app-text-1);
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 6px;
+}
+
+.toggle-btn {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--app-text-2);
+  display: flex;
+  align-items: center;
+  box-shadow: var(--app-shadow-sm);
+}
+
+// ── Top row: eslogan + congrats ──────────────────────────────
+.top-row {
+  display: flex;
+  gap: 14px;
   margin-bottom: 20px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 }
 
-.stat-pill {
+.eslogan-card {
+  flex: 2;
+  background: var(--app-surface);
+  border-radius: var(--app-radius-xl);
+  padding: 26px 22px;
+  display: flex;
+  align-items: center;
+  box-shadow: var(--app-shadow-sm);
+  border-left: 5px solid var(--app-primary);
+
+  .eslogan-text {
+    font-size: clamp(14px, 2vw, 20px);
+    color: var(--app-text-1);
+    line-height: 1.55;
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+.congrats-card {
   flex: 1;
-  background: var(--ion-background-color, #fff);
-  border: 1px solid var(--ion-color-light-shade);
-  border-radius: 16px;
-  padding: 14px 8px;
-  display: flex; flex-direction: column;
-  align-items: center; gap: 6px;
+  background: linear-gradient(135deg, var(--app-primary) 0%, var(--app-primary-dark) 100%);
+  border-radius: var(--app-radius-xl);
+  padding: 22px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: var(--app-shadow-primary);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 7px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--app-purple)              0,    var(--app-purple)              22px,
+      var(--app-pink)                22px, var(--app-pink)                44px,
+      rgba(255,255,255,0.4)          44px, rgba(255,255,255,0.4)          66px
+    );
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    bottom: -30px; right: -20px;
+  }
+
+  .congrats-avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.7);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .congrats-nombre {
+    font-size: 15px;
+    font-weight: 800;
+    color: white;
+    margin: 0 0 6px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
+  }
+
+  .congrats-frase {
+    font-size: 12px;
+    color: rgba(255,255,255,0.9);
+    margin: 0;
+    line-height: 1.4;
+    position: relative;
+    z-index: 1;
+  }
 }
 
-.stat-ico {
-  width: 34px; height: 34px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  ion-icon { font-size: 16px; }
+// ── Section label ────────────────────────────────────────────
+// Usa .section-label de global.scss — ya está definida ahí.
+// Si necesitas sobreescribir el color del icono/texto en esta página:
+.section-label {
+  ion-icon { color: var(--app-primary); }
+  span     { color: var(--app-primary); }
 }
 
-.stat-num { font-size: 20px; font-weight: 700; color: var(--ion-text-color); line-height: 1; }
-.stat-lbl { font-size: 10px; color: var(--ion-color-medium); text-align: center; }
-
-// ── Body ──────────────────────────────────────────────────────────────────────
-
-.home-body { padding: 4px 16px 100px; display: flex; flex-direction: column; gap: 16px; }
-
-.sec-header { display: flex; align-items: center; justify-content: space-between; }
-.sec-title  { font-size: 14px; font-weight: 600; color: var(--ion-text-color); }
-
-// ── Quick cards ───────────────────────────────────────────────────────────────
-
-.quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-.qcard {
-  background: var(--ion-background-color, #fff);
-  border: 1px solid var(--ion-color-light-shade);
-  border-radius: 16px;
-  padding: 16px 14px;
-  display: flex; flex-direction: column; gap: 12px;
-  cursor: pointer; transition: opacity 0.15s;
-  &:active { opacity: 0.75; }
+// ── Stat cards vibrantes ─────────────────────────────────────
+.stats-scroll-wrap {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-bottom: 24px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
 }
 
-.qcard-icon {
-  width: 42px; height: 42px; border-radius: 13px;
-  display: flex; align-items: center; justify-content: center;
-  ion-icon { font-size: 20px; }
+.stat-card-vib {
+  border-radius: var(--app-radius-lg);
+  padding: 16px 16px 8px;
+  min-width: 150px;
+  flex-shrink: 0;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--app-shadow-md);
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 80px; height: 80px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    top: -20px; right: -20px;
+  }
+
+  .stat-vib-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stat-vib-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    margin: 0 0 4px;
+    opacity: 0.9;
+    text-transform: uppercase;
+  }
+
+  .stat-vib-num {
+    font-size: 32px;
+    font-weight: 900;
+    margin: 0;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+
+  .stat-vib-icon-wrap {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.2);
+    border-radius: var(--app-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    ion-icon { font-size: 22px; }
+  }
+
+  .sparkline-vib {
+    width: 100%;
+    height: 28px;
+    display: block;
+    margin-top: 6px;
+    position: relative;
+    z-index: 1;
+  }
 }
 
-.qcard-body {
+// Gradientes — usan variables semánticas del sistema (fijas, no cambian con el tema)
+.primary-grad { background: linear-gradient(135deg, var(--app-primary)  0%, var(--app-primary-dark)  100%); box-shadow: 0 4px 16px rgba(var(--app-primary-rgb), 0.4); }
+.amber-grad   { background: linear-gradient(135deg, var(--app-warning)  0%, #e67e22                  100%); box-shadow: 0 4px 16px rgba(245,166,35,0.4); }
+.teal-grad    { background: linear-gradient(135deg, var(--app-success)  0%, #059669                  100%); box-shadow: 0 4px 16px rgba(16,185,129,0.4); }
+.purple-grad  { background: linear-gradient(135deg, var(--app-purple)   0%, #6d28d9                  100%); box-shadow: 0 4px 16px rgba(139,92,246,0.4); }
+.pink-grad    { background: linear-gradient(135deg, var(--app-pink)     0%, #db2777                  100%); box-shadow: 0 4px 16px rgba(236,72,153,0.4); }
+.blue-grad    { background: linear-gradient(135deg, var(--app-info)     0%, #2563eb                  100%); box-shadow: 0 4px 16px rgba(59,130,246,0.4); }
+
+// ── Filtros ──────────────────────────────────────────────────
+.filtros-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  background: var(--app-surface);
+  border-radius: var(--app-radius-md);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--app-shadow-sm);
+}
+
+.filtro-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   flex: 1;
-  p    { font-size: 13px; font-weight: 600; color: var(--ion-text-color); margin: 0 0 2px; }
-  span { font-size: 11px; color: var(--ion-color-medium); }
+  min-width: 130px;
+
+  label {
+    font-size: 12px;
+    color: var(--app-text-2);
+    font-weight: 600;
+  }
 }
 
-.qcard-arrow { color: var(--ion-color-medium); font-size: 14px; align-self: flex-end; }
+// ── Inputs de filtro ─────────────────────────────────────────
+.filtro-input,
+.filtro-select {
+  border: 1.5px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--app-text-1);
+  background: var(--app-surface-2);
+  width: 100%;
+  appearance: none;
+  font-family: var(--ion-font-family);
+  outline: none;
+  height: 38px;
+  transition: border-color var(--app-transition), box-shadow var(--app-transition);
 
-// ── Colores de íconos ─────────────────────────────────────────────────────────
+  &::placeholder { color: var(--app-text-3); }
 
-.s-blue   { background: #E6F1FB; ion-icon { color: #185FA5; } }
-.s-green  { background: #EAF3DE; ion-icon { color: #3B6D11; } }
-.s-amber  { background: #FAEEDA; ion-icon { color: #633806; } }
-.s-purple { background: #EEEDFE; ion-icon { color: #534AB7; } }
-.s-coral  { background: #FAECE7; ion-icon { color: #712B13; } }
+  &:focus {
+    border-color: var(--app-primary);
+    box-shadow: 0 0 0 3px rgba(var(--app-primary-rgb), 0.12);
+    background: var(--app-surface);
+  }
+}
+
+.btn-filtrar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--app-primary);
+  color: white;
+  border: none;
+  border-radius: var(--app-radius-sm);
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  height: 38px;
+  align-self: flex-end;
+  transition: box-shadow var(--app-transition), transform var(--app-transition);
+  box-shadow: 0 4px 14px rgba(var(--app-primary-rgb), 0.35);
+  font-family: var(--ion-font-family);
+
+  ion-icon { font-size: 15px; }
+  &:hover  { box-shadow: 0 6px 18px rgba(var(--app-primary-rgb), 0.45); }
+  &:active { transform: scale(0.97); }
+}
+
+// ── Tabla de citas ───────────────────────────────────────────
+.citas-section {
+  background: var(--app-surface);
+  border-radius: var(--app-radius-xl);
+  box-shadow: var(--app-shadow-sm);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.citas-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+
+  thead tr {
+    background: var(--app-surface-2);
+    border-bottom: 2px solid var(--app-border);
+  }
+
+  th {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--app-text-2);
+    padding: 12px 14px;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+  }
+
+  td {
+    font-size: 13px;
+    padding: 12px 14px;
+    color: var(--app-text-1);
+    border-bottom: 1px solid var(--app-border);
+    vertical-align: middle;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td      { background: var(--app-primary-xlight); }
+}
+
+// ── Acciones ─────────────────────────────────────────────────
+.acciones-cell {
+  display: flex;
+  gap: 6px;
+}
+
+.accion-btn {
+  border: none;
+  border-radius: var(--app-radius-xs);
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  transition: transform var(--app-transition);
+  &:active { transform: scale(0.92); }
+}
+
+.ver-btn  { background: var(--app-info-light);    color: var(--app-info); }
+.edit-btn { background: var(--app-success-light); color: var(--app-success); }
+
+// ── Celda fecha/hora ─────────────────────────────────────────
+.fecha-cell {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--app-text-1);
+}
+
+.hora-cell {
+  display: block;
+  font-size: 11px;
+  color: var(--app-text-3);
+  margin-top: 1px;
+}
+
+.mascota-cell {
+  font-weight: 600;
+  color: var(--app-text-1);
+}
+
+// ── Estado pills ─────────────────────────────────────────────
+.estado-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--app-radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+
+  &.pendiente  { background: var(--app-warning-light); color: #92400e; }
+  &.en-proceso { background: var(--app-info-light);    color: #1e40af; }
+  &.completada { background: var(--app-success-light); color: #065f46; }
+  &.cancelada  { background: var(--app-danger-light);  color: #991b1b; }
+}
+
+.sin-citas {
+  text-align: center;
+  color: var(--app-text-3);
+  font-style: italic;
+  padding: 28px 0 !important;
+  font-size: 14px;
+}

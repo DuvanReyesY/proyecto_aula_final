@@ -1,0 +1,150 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/layout/historial"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Expediente Médico</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding dashboard-bg">
+  <ng-container *ngIf="mascota">
+    
+    <div class="header-profesional" style="background: white; border-radius: 12px; padding: 15px 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center;">
+      <div class="mascota-info-header" style="display: flex; align-items: center; gap: 12px;">
+        <div class="icon-circle-teal" style="background: #e6f4f1; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+          <ion-icon name="paw" style="font-size: 1.4rem; color: #008080;"></ion-icon>
+        </div>
+        <div>
+          <h2 style="margin: 0; font-size: 18px; color: var(--ion-color-primary); font-weight: bold; text-transform: capitalize;">{{ mascota.nombre }}</h2>
+          <p class="texto-mutado" style="margin: 2px 0 0 0; font-size: 13px; text-transform: capitalize;">{{ mascota.especie }} • {{ mascota.raza }}</p>
+        </div>
+      </div>
+      <div class="mascota-detalles-header" style="text-align: right; display: flex; gap: 20px;">
+        <p class="texto-principal" style="margin: 0; font-size: 14px;"><strong>Sexo:</strong> <span style="text-transform: capitalize;">{{ mascota.sexo }}</span></p>
+        <p class="texto-principal" style="margin: 0; font-size: 14px;"><strong>ID Paciente:</strong> {{ idMascota.substring(0,6) }}</p>
+      </div>
+    </div>
+
+    <div class="top-dashboard-grid">
+      
+      <div class="perfil-resumen-card" *ngIf="usuarioActual">
+        <div class="perfil-avatar-header" style="display: flex; align-items: center; gap: 12px;">
+          <ion-avatar style="width: 45px; height: 45px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+            <ion-icon name="person" style="font-size: 24px; color: #64748b;"></ion-icon>
+          </ion-avatar>
+          
+          <div *ngIf="rolActual === 'veterinario'">
+            <h3 class="texto-principal" style="margin: 0; font-size: 14px; font-weight: bold;">Dr. {{ usuarioActual.Nombre | titlecase }} {{ usuarioActual.Apellido | titlecase }}</h3>
+            <p class="vet-especialidad" style="margin: 2px 0 0 0; font-size: 12px; text-transform: capitalize; color: #64748b;">{{ usuarioActual.Especialidad || 'Médico General' }}</p>
+          </div>
+
+          <div *ngIf="rolActual === 'administrador'">
+            <ion-badge color="tertiary" style="margin-bottom: 3px;">Panel Admin</ion-badge>
+            <h3 class="texto-principal" style="margin: 0; font-size: 13px; font-weight: bold;">{{ usuarioActual.Nombre || 'Administrador' }}</h3>
+          </div>
+        </div>
+        
+        <div class="perfil-mini-detalles" style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #eee;">
+          <p style="margin: 0; font-size: 11px; color: #64748b;" *ngIf="rolActual === 'veterinario'">
+            <ion-icon name="funnel-outline" style="vertical-align: middle;"></ion-icon> Mostrando solo tus consultas
+          </p>
+          <p style="margin: 0; font-size: 11px; color: #2dd36f;" *ngIf="rolActual === 'administrador'">
+            <ion-icon name="eye-outline" style="vertical-align: middle;"></ion-icon> Modo global: Historial completo
+          </p>
+        </div>
+      </div>
+
+      <div class="antecedentes-card">
+        <div class="header-action">
+          <h3>
+            <ion-icon name="medical"></ion-icon>
+            Antecedentes Médicos
+          </h3>
+          <ion-button fill="clear" size="small" (click)="editandoAntecedentes = !editandoAntecedentes" *ngIf="!editandoAntecedentes">
+            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+          </ion-button>
+        </div>
+
+        <div class="antecedentes-grid" *ngIf="!editandoAntecedentes">
+          <div class="info-box"><strong>Alergias:</strong><p>{{ antecedentesForm.alergias || 'Sin registro' }}</p></div>
+          <div class="info-box"><strong>Cirugías:</strong><p>{{ antecedentesForm.cirugias || 'Sin registro' }}</p></div>
+          <div class="info-box"><strong>Enf. Crónicas:</strong><p>{{ antecedentesForm.enfermedadesCr || 'Sin registro' }}</p></div>
+          <div class="info-box"><strong>Vacunación:</strong><p>{{ antecedentesForm.esquemaVacunacion || 'Sin registro' }}</p></div>
+          <div class="info-box"><strong>Dieta:</strong><p>{{ antecedentesForm.dieta || 'Estándar' }}</p></div>
+        </div>
+
+        <div class="antecedentes-form" *ngIf="editandoAntecedentes">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+            <ion-item lines="none" class="input-item-box"><ion-input label="Alergias" labelPlacement="floating" [(ngModel)]="antecedentesForm.alergias"></ion-input></ion-item>
+            <ion-item lines="none" class="input-item-box"><ion-input label="Cirugías" labelPlacement="floating" [(ngModel)]="antecedentesForm.cirugias"></ion-input></ion-item>
+            <ion-item lines="none" class="input-item-box"><ion-input label="Enf. Crónicas" labelPlacement="floating" [(ngModel)]="antecedentesForm.enfermedadesCr"></ion-input></ion-item>
+            <ion-item lines="none" class="input-item-box"><ion-input label="Vacunas" labelPlacement="floating" [(ngModel)]="antecedentesForm.esquemaVacunacion"></ion-input></ion-item>
+            <ion-item lines="none" class="input-item-box"><ion-input label="Dieta" labelPlacement="floating" [(ngModel)]="antecedentesForm.dieta"></ion-input></ion-item>
+          </div>
+          <div class="form-actions">
+            <ion-button color="medium" fill="clear" (click)="editandoAntecedentes = false">Cancelar</ion-button>
+            <ion-button color="primary" (click)="guardarAntecedentes()">Guardar</ion-button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="dashboard-grid">
+      
+      <div class="column">
+        <div class="col-header"><ion-icon name="time-outline"></ion-icon> Consultas Anteriores</div>
+        <div class="scroll-area">
+          <div class="citas-empty" *ngIf="citasPasadas.length === 0">No hay consultas previas</div>
+          <div class="cita-item" *ngFor="let cita of citasPasadas" 
+               [class.active]="citaSeleccionada?.idCita === cita.idCita"
+               (click)="seleccionarCita(cita)">
+            <div class="cita-fecha texto-principal">{{ cita.fecha }}</div>
+            <div class="cita-vet texto-mutado">Dr. {{ cita.nombreVeterinario }}</div>
+            <ion-badge [color]="cita.estado === 'finalizada' ? 'success' : 'medium'">
+              {{ cita.estado === 'finalizada' ? 'Finalizada' : 'No asistió' }}
+            </ion-badge>
+          </div>
+        </div>
+      </div>
+
+      <div class="column col-center">
+        <div class="col-header"><ion-icon name="document-text-outline"></ion-icon> Detalles de la Consulta</div>
+        <div class="detalle-content" *ngIf="citaSeleccionada">
+          <div class="resumen-cita">
+            <h3>Fecha: {{ citaSeleccionada.fecha }}</h3>
+            <p class="texto-principal"><strong>Motivo / Tipo:</strong> {{ citaSeleccionada.tipo }}</p>
+            <p class="texto-principal"><strong>Atendió:</strong> Dr/a. {{ citaSeleccionada.nombreVeterinario }}</p>
+          </div>
+
+          <ng-container *ngIf="diagnosticoSeleccionado">
+            <div class="diag-section"><h4>Síntomas</h4><p class="texto-principal">{{ diagnosticoSeleccionado.sintomas }}</p></div>
+            <div class="diag-section"><h4>Diagnóstico</h4><p class="texto-principal">{{ diagnosticoSeleccionado.diagnostico }}</p></div>
+            <div class="diag-section"><h4>Tratamiento y Medicamentos</h4><p class="texto-principal">{{ diagnosticoSeleccionado.tratamiento }}</p><p class="texto-principal" *ngIf="diagnosticoSeleccionado.medicamentos">{{ diagnosticoSeleccionado.medicamentos }}</p></div>
+            <ion-button expand="block" class="btn-pdf" (click)="generarPDF()"><ion-icon name="download-outline" slot="start"></ion-icon>Generar Reporte PDF</ion-button>
+          </ng-container>
+
+          <div class="no-diag texto-mutado" *ngIf="!diagnosticoSeleccionado && citaSeleccionada.estado === 'finalizada'">
+            <p>Esta cita no cuenta con un diagnóstico registrado.</p>
+          </div>
+        </div>
+        <div class="no-selection" *ngIf="!citaSeleccionada"><ion-icon name="paw-outline"></ion-icon><p>Selecciona una consulta pasada para ver los detalles.</p></div>
+      </div>
+
+      <div class="column">
+        <div class="col-header"><ion-icon name="calendar-outline"></ion-icon> Próximas Citas</div>
+        <div class="scroll-area">
+          <div class="citas-empty" *ngIf="citasProximas.length === 0">No hay citas agendadas</div>
+          <div class="cita-item upcoming" *ngFor="let cita of citasProximas">
+            <div class="cita-fecha texto-principal">{{ cita.fecha }} a las {{ cita.horaInicio }}</div>
+            <div class="cita-vet texto-mutado">{{ cita.tipo }}</div>
+            <ion-badge color="warning" *ngIf="cita.estado === 'pendiente'">Pendiente</ion-badge>
+            <ion-badge color="primary" *ngIf="cita.estado === 'en_proceso'">En Proceso</ion-badge>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </ng-container>
+</ion-content>

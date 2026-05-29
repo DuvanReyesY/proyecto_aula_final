@@ -1,0 +1,90 @@
+<ion-content [fullscreen]="true">
+  <div class="hv-page">
+
+<div class="hv-hero">
+  <div class="hv-hero-text">
+    <p class="hv-saludo">{{ saludoHora }},</p>
+    <h1 class="hv-nombre">Dr. {{ vetNombre }} {{ vetApellido }}</h1>
+    <p class="hv-especialidad" *ngIf="vetEspecialidad">{{ vetEspecialidad }}</p>
+  </div>
+  <div class="hv-avatar">
+    <span class="hv-avatar-icon">🩺</span>
+  </div>
+</div>
+
+    <!-- MÉTRICAS -->
+    <section class="hv-metrics">
+      <div class="hv-metric-card hv-mc--hoy">
+        <span class="hv-mc-icon">📅</span>
+        <span class="hv-mc-num">{{ resumen.citasHoy }}</span>
+        <span class="hv-mc-label">Citas hoy</span>
+      </div>
+      <div class="hv-metric-card hv-mc--pendientes">
+        <span class="hv-mc-icon">⏳</span>
+        <span class="hv-mc-num">{{ resumen.citasPendientes }}</span>
+        <span class="hv-mc-label">Pendientes</span>
+      </div>
+      <div class="hv-metric-card hv-mc--atendidos">
+        <span class="hv-mc-icon">✅</span>
+        <span class="hv-mc-num">{{ resumen.pacientesAtendidos }}</span>
+        <span class="hv-mc-label">Finalizadas</span>
+      </div>
+    </section>
+
+    <!-- PRÓXIMA CITA -->
+    <section class="hv-proxima" *ngIf="resumen.proximaCita">
+      <div class="hv-proxima-label">
+        <span class="hv-proxima-dot"></span>
+        Próxima cita
+      </div>
+      <div class="hv-proxima-card">
+        <div class="hv-pc-time">
+          <span class="hv-pc-hora">{{ formatHora12(resumen.proximaCita!.horaInicio) }}</span>
+        </div>
+        <div class="hv-pc-sep"></div>
+        <div class="hv-pc-info">
+          <p class="hv-pc-mascota">{{ resumen.proximaCita!.nombreMascota }}</p>
+          <p class="hv-pc-tipo">{{ resumen.proximaCita!.tipo }}</p>
+          <p class="hv-pc-cliente">{{ resumen.proximaCita!.nombreCliente }}</p>
+        </div>
+        <span [class]="'hv-badge ' + badgeEstado(resumen.proximaCita!.estado)">
+          {{ textoEstado(resumen.proximaCita!.estado) }}
+        </span>
+      </div>
+    </section>
+
+    <div class="hv-sin-proxima" *ngIf="!resumen.proximaCita">
+      <span class="hv-sin-icon">🎉</span>
+      <span>Sin más citas pendientes por hoy</span>
+    </div>
+
+    <!-- CALENDARIO — va aquí, justo después de las métricas/próxima cita -->
+    <section class="hv-calendar-section">
+      <h2 class="hv-section-title">Mi agenda</h2>
+      <div class="hv-cal-wrapper">
+        <app-calendar-grid
+          [citas]="(todasCitas$ | async) ?? []"
+          [veterinarios]="(veterinarios$ | async) ?? []"
+          [mostrarFiltroVet]="false"
+          (citaClick)="onCitaClick($event)"
+          (slotClick)="onSlotClick($event)">
+        </app-calendar-grid>
+      </div>
+    </section>
+
+    <!-- ACCIONES RÁPIDAS — al fondo -->
+    <section class="hv-acciones">
+      <h2 class="hv-section-title">Acceso rápido</h2>
+      <div class="hv-acciones-row">
+        <a class="hv-accion-card"
+          *ngFor="let a of accionesRapidas"
+          [routerLink]="a.ruta">
+          <span class="hv-ac-icon">{{ a.icon }}</span>
+          <span class="hv-ac-label">{{ a.label }}</span>
+          <span class="hv-ac-sub">{{ a.sub }}</span>
+        </a>
+      </div>
+    </section>
+
+  </div>
+</ion-content>

@@ -4,6 +4,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { Router } from '@angular/router';
 import { PrivilegiosModalComponent } from 'src/app/shared/components/privilegios-modal/privilegios-modal.component';
+import { RegisterPage } from 'src/app/pages/register/register.page';
 
 @Component({
   selector: 'app-usuarios',
@@ -127,9 +128,37 @@ export class UsuariosPage implements OnInit {
     await modal.present();
   }
 
-  editarUsuario(usuario: any) {
-    this.router.navigate(['/layout/usuarios/editar', usuario.uid, usuario.rol]);
+async nuevoUsuario() {
+  const modal = await this.modalCtrl.create({
+    component: RegisterPage,
+    componentProps: { modoEdicionInput: false },
+    breakpoints: [0, 1],
+    initialBreakpoint: 1,
+  });
+  await modal.present();
+  const { data } = await modal.onWillDismiss();
+  if (data?.guardado) {
+    this.mostrarToast('Usuario registrado exitosamente', 'success');
   }
+}
+
+async editarUsuario(usuario: any) {
+  const modal = await this.modalCtrl.create({
+    component: RegisterPage,
+    componentProps: {
+      modoEdicionInput: true,
+      uidEditarInput:   usuario.uid,
+      rolInput:         usuario.rol,
+    },
+    breakpoints: [0, 1],
+    initialBreakpoint: 1,
+  });
+  await modal.present();
+  const { data } = await modal.onWillDismiss();
+  if (data?.guardado) {
+    this.mostrarToast('Usuario actualizado correctamente', 'success');
+  }
+}
 
   getBadgeColor(rol: string): string {
     const map: any = {

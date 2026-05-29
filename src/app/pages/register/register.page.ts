@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';  // ← agrega Input
 import { Router, ActivatedRoute } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';  // ← agrega ModalController
 import { UserService } from 'src/app/core/services/user.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 
@@ -11,6 +11,12 @@ import { AuthService } from 'src/app/core/services/auth.service';
   standalone: false
 })
 export class RegisterPage implements OnInit {
+
+  // ── Inputs desde el modal ──────────────────
+  @Input() modoEdicionInput: boolean = false;
+  @Input() uidEditarInput: string = '';
+  @Input() rolInput: string = '';
+
   role: string = 'cliente';
   rolActual: string = '';
   registrando: boolean = false;
@@ -32,13 +38,30 @@ export class RegisterPage implements OnInit {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private toastCtrl: ToastController   // ✅
+    private toastCtrl: ToastController,
+    private modalCtrl: ModalController,  // ← agrega esto
   ) {}
 
   async ngOnInit() {
     this.rolActual = this.authService.getRolActual() ?? '';
     this.user.idAdministrador = this.authService.getUidActual() ?? '';
 
+    // ── Si viene como modal ──────────────────
+    if (this.modoEdicionInput && this.uidEditarInput) {
+      this.modoEdicion = true;
+      this.uidEditar   = this.uidEditarInput;
+      this.role        = this.rolInput;
+      this.cargando    = true;
+
+      const coleccion = this.userService.getColeccionPorRol(this.role);
+      const datos     = await this.userService.getDocumentOnce(coleccion, this.uidEditar);
+      if (datos) this.user = { ...this.user, ...datos };
+
+      this.cargando = false;
+      return;
+    }
+
+    // ── Fallback: si se abre por ruta ────────
     const uid = this.route.snapshot.paramMap.get('uid');
     const rol = this.route.snapshot.paramMap.get('rol');
 
@@ -56,6 +79,10 @@ export class RegisterPage implements OnInit {
     } else {
       if (this.rolActual === 'recepcionista') this.role = 'cliente';
     }
+  }
+
+  cerrarModal(guardado = false) {
+    this.modalCtrl.dismiss({ guardado });
   }
 
   getRoleIcon(): string {
@@ -99,7 +126,7 @@ export class RegisterPage implements OnInit {
 
       await this.userService.actualizarUsuario(coleccion, this.uidEditar, cambios);
       await this.mostrarToast('Cambios guardados correctamente', 'success');
-      this.router.navigate(['/layout/usuarios']);
+      this.cerrarModal(true);  // ← reemplaza router.navigate
     } catch (err: any) {
       await this.mostrarToast(err?.message || 'Error al guardar cambios', 'danger');
     } finally {
@@ -124,7 +151,7 @@ export class RegisterPage implements OnInit {
         case 'veterinario':   await this.userService.registerVeterinario(this.user);   break;
       }
       await this.mostrarToast(`${this.getRoleLabel()} registrado correctamente`, 'success');
-      this.router.navigate(['/layout/usuarios']);
+      this.cerrarModal(true);  // ← reemplaza router.navigate
     } catch (err: any) {
       await this.mostrarToast(err?.message || 'Error al registrar usuario', 'danger');
     } finally {
@@ -138,7 +165,7 @@ export class RegisterPage implements OnInit {
       duration: 2500,
       color,
       position: 'bottom',
-      icon: color === 'success' ? 'checkmark-circle-outline' : 
+      icon: color === 'success' ? 'checkmark-circle-outline' :
             color === 'warning' ? 'alert-outline' : 'close-circle-outline'
     });
     await toast.present();

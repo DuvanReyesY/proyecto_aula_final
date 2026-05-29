@@ -175,10 +175,10 @@
     <p>No se encontraron usuarios con ese criterio</p>
   </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 60px;">
-    <ion-fab-button color="primary" routerLink="/layout/usuarios/crear">
-      <ion-icon name="person-add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 60px;">
+  <ion-fab-button color="primary" (click)="nuevoUsuario()">
+    <ion-icon name="person-add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 
 </ion-content>

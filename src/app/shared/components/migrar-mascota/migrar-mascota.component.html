@@ -1,0 +1,95 @@
+<!-- migrar-mascota.component.html -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Migrar mascota</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrar()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Mascota origen -->
+  <p class="seccion-label">Mascota a migrar</p>
+  <ion-card class="card-mascota">
+    <ion-card-content>
+      <div class="mascota-row">
+        <ion-avatar>
+          <ion-icon name="paw" color="warning"></ion-icon>
+        </ion-avatar>
+        <div class="mascota-info">
+          <strong>{{ mascota.nombre }}</strong>
+          <span>{{ mascota.especie }} · {{ mascota.raza }}</span>
+        </div>
+        <ion-badge color="success">Activa</ion-badge>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Buscador -->
+  <p class="seccion-label">Nuevo propietario</p>
+  <ion-searchbar
+    placeholder="Buscar cliente..."
+    (ionInput)="filtrar($event)"
+    [debounce]="200">
+  </ion-searchbar>
+
+  <!-- Lista de clientes -->
+  <ion-list lines="full">
+    <ion-item
+      *ngFor="let cliente of clientesFiltrados"
+      [class.item-seleccionado]="clienteSeleccionado?.idCliente === cliente.idCliente"
+      (click)="seleccionar(cliente)"
+      button detail="false">
+
+      <ion-avatar slot="start" class="avatar-iniciales">
+        {{ iniciales(cliente) }}
+      </ion-avatar>
+
+      <ion-label>
+        <h3>{{ cliente.Nombre }} {{ cliente.Apellido }}</h3>
+        <p>{{ cliente.Correo }}</p>
+      </ion-label>
+
+      <ion-icon
+        *ngIf="clienteSeleccionado?.idCliente === cliente.idCliente"
+        slot="end"
+        name="checkmark-circle"
+        color="success">
+      </ion-icon>
+
+    </ion-item>
+
+    <ion-item *ngIf="clientesFiltrados.length === 0" lines="none">
+      <ion-label class="ion-text-center" color="medium">
+        <p>No se encontraron clientes</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
+
+<ion-footer class="ion-padding">
+
+  <!-- Resumen del destino -->
+  <div class="destino-info" *ngIf="clienteSeleccionado">
+    <ion-icon name="swap-horizontal-outline" color="tertiary"></ion-icon>
+    <span>
+      {{ mascota.nombre }} → 
+      <strong>{{ clienteSeleccionado.Nombre }} {{ clienteSeleccionado.Apellido }}</strong>
+    </span>
+  </div>
+
+  <ion-button
+    expand="block"
+    color="tertiary"
+    [disabled]="!clienteSeleccionado"
+    (click)="migrar()">
+    <ion-icon slot="start" name="swap-horizontal-outline"></ion-icon>
+    Confirmar migración
+  </ion-button>
+
+</ion-footer>
